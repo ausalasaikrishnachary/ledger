@@ -6,9 +6,15 @@ import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
 import './ViewCustomers.css';
 import DateRangeDropdown from './DateRangeDropdown';
+import { useNavigate } from 'react-router-dom';
 
 const ViewCustomers = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const navigate = useNavigate();
+
+  const handleAddCustomer = () => {
+    navigate('/add-customer');
+  };
 
   const customers = [
     {
@@ -47,7 +53,9 @@ const ViewCustomers = ({ user }) => {
                 </div>
                 <Button variant="info" className="me-3 text-white">Download Report</Button>
               </div>
-              <Button variant="success">Add Customer</Button>
+               <Button variant="success" onClick={handleAddCustomer}>
+      Add Customer
+    </Button>
             </div>
 
             <Table bordered striped responsive className="text-center">

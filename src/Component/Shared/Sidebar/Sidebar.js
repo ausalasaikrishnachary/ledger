@@ -37,7 +37,7 @@ const Sidebar = ({ user, collapsed, activePage }) => {
 
   return (
     <nav className={`pcoded-navbar ${collapsed ? 'collapsed' : ''}`}>
-      <div className="navbar-wrapper">
+ <div className="navbar-wrapper">
         <div className="navbar-content scroll-div">
           <ul className="nav pcoded-inner-navbar">
             <li className={`nav-item ${isActive('/') ? 'active' : ''}`}>
@@ -54,40 +54,63 @@ const Sidebar = ({ user, collapsed, activePage }) => {
               </Link>
             </li>
             
-            {/* Continue with other menu items following the same pattern */}
-            {/* Example for Contacts */}
-              <li className={`nav-item pcoded-hasmenu ${activeMenu === 'contacts' ? 'pcoded-trigger' : ''}`}>
-              <a href="#!" className="nav-link" onClick={() => toggleMenu('contacts')}>
+            <li className={`nav-item pcoded-hasmenu ${activeMenu === 'contacts' ? 'pcoded-trigger' : ''}`}>
+              <a href="#!" className="nav-link" onClick={(e) => {
+                e.preventDefault();
+                toggleMenu('contacts');
+              }}>
                 <span className="pcoded-micon"><FiUser /></span>
                 <span className="pcoded-mtext">Contacts</span>
               </a>
-              <ul className="pcoded-submenu">
-                <li><Link to="/customers">Customers</Link></li>
-                <li><Link to="/suppliers">Suppliers</Link></li>
+              <ul className="pcoded-submenu" style={{ display: activeMenu === 'contacts' ? 'block' : 'none' }}>
+                <li className={isActive('/view-customers') ? 'active' : ''}>
+                  <Link to="/view-customers">Customers</Link>
+                </li>
+                <li className={isActive('/view-suppliers') ? 'active' : ''}>
+                  <Link to="/view-suppliers">Suppliers</Link>
+                </li>
               </ul>
             </li>
 
             <li className={`nav-item pcoded-hasmenu ${activeMenu === 'inventory' ? 'pcoded-trigger' : ''}`}>
-              <a href="#!" className="nav-link" onClick={() => toggleMenu('inventory')}>
+              <a href="#!" className="nav-link" onClick={(e) => {
+                e.preventDefault();
+                toggleMenu('inventory');
+              }}>
                 <span className="pcoded-micon"><FaHandHoldingUsd /></span>
                 <span className="pcoded-mtext">Inventory</span>
               </a>
-              <ul className="pcoded-submenu">
-                <li><Link to="/manage-products?type=Sales Catalog">Sales Catalog</Link></li>
-                <li><Link to="/manage-products?type=Purchased Items">Purchased Items</Link></li>
+              <ul className="pcoded-submenu" style={{ display: activeMenu === 'inventory' ? 'block' : 'none' }}>
+                <li className={isActive('/manage-products') ? 'active' : ''}>
+                  <Link to="/manage-products?type=Sales Catalog">Sales Catalog</Link>
+                </li>
+                <li className={isActive('/manage-products') ? 'active' : ''}>
+                  <Link to="/manage-products?type=Purchased Items">Purchased Items</Link>
+                </li>
               </ul>
             </li>
 
             <li className={`nav-item pcoded-hasmenu ${activeMenu === 'sales' ? 'pcoded-trigger' : ''}`}>
-              <a href="#!" className="nav-link" onClick={() => toggleMenu('sales')}>
+              <a href="#!" className="nav-link" onClick={(e) => {
+                e.preventDefault();
+                toggleMenu('sales');
+              }}>
                 <span className="pcoded-micon"><FaHandHoldingUsd /></span>
                 <span className="pcoded-mtext">Sales</span>
               </a>
-              <ul className="pcoded-submenu">
-                <li><Link to="/view-invoices">Invoices</Link></li>
-                <li><Link to="/manage-receipt">Receipts</Link></li>
-                <li><Link to="/view-quotation">Quotation</Link></li>
-                <li><Link to="/manage_receivables">Receivables</Link></li>
+              <ul className="pcoded-submenu" style={{ display: activeMenu === 'sales' ? 'block' : 'none' }}>
+                <li className={isActive('/view-invoices') ? 'active' : ''}>
+                  <Link to="/view-invoices">Invoices</Link>
+                </li>
+                <li className={isActive('/manage-receipt') ? 'active' : ''}>
+                  <Link to="/manage-receipt">Receipts</Link>
+                </li>
+                <li className={isActive('/view-quotation') ? 'active' : ''}>
+                  <Link to="/view-quotation">Quotation</Link>
+                </li>
+                <li className={isActive('/manage_receivables') ? 'active' : ''}>
+                  <Link to="/manage_receivables">Receivables</Link>
+                </li>
               </ul>
             </li>
 

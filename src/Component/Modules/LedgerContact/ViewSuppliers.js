@@ -6,10 +6,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
 import DateRangeDropdown from './DateRangeDropdown';
-
+import { useNavigate } from 'react-router-dom';
 
 const ViewSuppliers = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const navigate = useNavigate();
+  
+    const handleAddCustomer = () => {
+      navigate('/add-supplier');
+    };
 
   const customers = [
     {
@@ -46,7 +51,7 @@ const ViewSuppliers = ({ user }) => {
   <DateRangeDropdown onChange={(range) => console.log('Selected Range:', range)} />
 </div>
         <Button variant="info" className="me-auto text-white">Download Report</Button>
-        <Button variant="success">Add Supplier</Button>
+        <Button variant="success"  onClick={handleAddCustomer} >Add Supplier</Button>
       </div>
 
       <Table bordered striped responsive className="text-center view-customers-table">
