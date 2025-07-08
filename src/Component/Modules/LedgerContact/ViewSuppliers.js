@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { FaCalendarAlt, FaTrash, FaEdit } from 'react-icons/fa';
-import { Button, Table, Form } from 'react-bootstrap';
+import { Button, Table, Form, Container } from 'react-bootstrap';
 // import './ViewCustomers.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Sidebar from '../../Shared/Sidebar/Sidebar';
+import Header from '../../Shared/Header/Header';
 import DateRangeDropdown from './DateRangeDropdown';
 
 
-const ViewSuppliers = () => {
+const ViewSuppliers = ({ user }) => {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   const customers = [
     {
@@ -21,7 +25,20 @@ const ViewSuppliers = () => {
   ];
 
   return (
-    <div className="view-customers-container">
+    <div className="dashboard-container">
+      <Header 
+        user={user} 
+        toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} 
+      />
+      <div className="content-wrapper">
+        <div className={`pcoded-navbar ${sidebarCollapsed ? 'navbar-collapsed' : ''}`}>
+          <Sidebar 
+            user={user} 
+            collapsed={sidebarCollapsed} 
+          />
+        </div>
+        <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
+          <Container fluid className="p-3">
       <h2 className="mb-3">View Suppliers</h2>
 
       <div className="d-flex align-items-center mb-3 view-customers-controls">
@@ -73,6 +90,9 @@ const ViewSuppliers = () => {
           ))}
         </tbody>
       </Table>
+        </Container>
+        </div>
+    </div>
     </div>
   );
 };
