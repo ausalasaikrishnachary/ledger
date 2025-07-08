@@ -58,7 +58,7 @@ const Dashboard = ({ user }) => {
           />
         </div>
         <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
-          <Container fluid className="p-3">
+          <Container fluid className="p-3" style={{ marginTop: '60px' }}>
             {/* Navigation Tabs */}
             <Nav variant="tabs" defaultActiveKey="/revenue" className="mb-3">
               <Nav.Item>

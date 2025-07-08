@@ -1,29 +1,30 @@
 .text-purple {
   color: #a020f0;
 }
-/* .dashboard-container {
+
+.dashboard-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-} */
+}
 
-/* .content-wrapper {
+.content-wrapper {
   display: flex;
   flex: 1;
-  margin-top: 56px; /* Height of the header 
-} */
+}
 
-/* .pcoded-navbar {
+.pcoded-navbar {
   display: block;
-  z-index: 1028;
+  z-index: 1020;
   position: fixed;
   box-shadow: 0 2px 10px -1px rgba(69, 90, 100, 0.3);
   transition: all 0.3s ease-in-out;
   width: 235px;
-  height: calc(100% - 56px);
+  height: calc(100% - 60px);
   background: black;
   color: #d0dcda;
-} */
+  top: 48px;
+}
 
 .pcoded-navbar.navbar-collapsed {
   width: 70px;
@@ -35,6 +36,7 @@
   margin-left: 235px;
   transition: all 0.3s ease-in-out;
   padding: 15px;
+  margin-top: 60px;
 }
 
 .main-content.collapsed {

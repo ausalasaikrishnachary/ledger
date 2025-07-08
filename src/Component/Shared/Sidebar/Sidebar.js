@@ -21,6 +21,43 @@ const Sidebar = ({ user, collapsed, activePage }) => {
   const location = useLocation();
   const [activeMenu, setActiveMenu] = React.useState(null);
 
+  // Set initial active menu based on current path
+  React.useEffect(() => {
+    const path = location.pathname;
+    if (path.startsWith('/view-customers') || path.startsWith('/view-suppliers')) {
+      setActiveMenu('contacts');
+    } else if (path.startsWith('/manage-products')) {
+      setActiveMenu('inventory');
+    } else if (path.startsWith('/view-invoices') || 
+               path.startsWith('/manage-receipt') || 
+               path.startsWith('/view-quotation') || 
+               path.startsWith('/manage_receivables')) {
+      setActiveMenu('sales');
+    } else if (path.startsWith('/view-purchase-invoices') || 
+               path.startsWith('/manage-voucher') || 
+               path.startsWith('/view-accounts-payables')) {
+      setActiveMenu('purchases');
+    } else if (path.startsWith('/gst-compliance') || 
+               path.startsWith('/tds-compliance') || 
+               path.startsWith('/income-tax-compliance')) {
+      setActiveMenu('taxation');
+    } else if (path.startsWith('/view_employees') || 
+               path.startsWith('/view_attendence') || 
+               path.startsWith('/payroll')) {
+      setActiveMenu('hr');
+    } else if (path.startsWith('/all_invoices') || 
+               path.startsWith('/change-format') || 
+               path.startsWith('/invoice-settings') || 
+               path.startsWith('/expense-settings') || 
+               path.startsWith('/sector-settings') || 
+               path.startsWith('/inventory-settings') || 
+               path.startsWith('/merge-products') || 
+               path.startsWith('/merge-buyers') || 
+               path.startsWith('/merge-sellers')) {
+      setActiveMenu('settings');
+    }
+  }, [location.pathname]);
+
   const toggleMenu = (menu) => {
     if (activeMenu === menu) {
       setActiveMenu(null);
@@ -32,12 +69,12 @@ const Sidebar = ({ user, collapsed, activePage }) => {
   // Determine active page based on current route
   const isActive = (path) => {
     return location.pathname === path || 
-           location.pathname.startsWith(path) && path !== '/';
+           (path !== '/' && location.pathname.startsWith(path));
   };
 
   return (
     <nav className={`pcoded-navbar ${collapsed ? 'collapsed' : ''}`}>
- <div className="navbar-wrapper">
+      <div className="navbar-wrapper">
         <div className="navbar-content scroll-div">
           <ul className="nav pcoded-inner-navbar">
             <li className={`nav-item ${isActive('/') ? 'active' : ''}`}>
@@ -115,30 +152,48 @@ const Sidebar = ({ user, collapsed, activePage }) => {
             </li>
 
             <li className={`nav-item pcoded-hasmenu ${activeMenu === 'purchases' ? 'pcoded-trigger' : ''}`}>
-              <a href="#!" className="nav-link" onClick={() => toggleMenu('purchases')}>
+              <a href="#!" className="nav-link" onClick={(e) => {
+                e.preventDefault();
+                toggleMenu('purchases');
+              }}>
                 <span className="pcoded-micon"><FaCommentDollar /></span>
                 <span className="pcoded-mtext">Purchases</span>
               </a>
-              <ul className="pcoded-submenu">
-                <li><Link to="/view-purchase-invoices">Purchase Invoices</Link></li>
-                <li><Link to="/manage-voucher">Expense Vouchers</Link></li>
-                <li><Link to="/view-accounts-payables">Accounts Payables</Link></li>
+              <ul className="pcoded-submenu" style={{ display: activeMenu === 'purchases' ? 'block' : 'none' }}>
+                <li className={isActive('/view-purchase-invoices') ? 'active' : ''}>
+                  <Link to="/view-purchase-invoices">Purchase Invoices</Link>
+                </li>
+                <li className={isActive('/manage-voucher') ? 'active' : ''}>
+                  <Link to="/manage-voucher">Expense Vouchers</Link>
+                </li>
+                <li className={isActive('/view-accounts-payables') ? 'active' : ''}>
+                  <Link to="/view-accounts-payables">Accounts Payables</Link>
+                </li>
               </ul>
             </li>
 
             <li className={`nav-item pcoded-hasmenu ${activeMenu === 'taxation' ? 'pcoded-trigger' : ''}`}>
-              <a href="#!" className="nav-link" onClick={() => toggleMenu('taxation')}>
+              <a href="#!" className="nav-link" onClick={(e) => {
+                e.preventDefault();
+                toggleMenu('taxation');
+              }}>
                 <span className="pcoded-micon"><FaCommentDollar /></span>
                 <span className="pcoded-mtext">Taxation</span>
               </a>
-              <ul className="pcoded-submenu">
-                <li><Link to="/gst-compliance">GST Compliance</Link></li>
-                <li><Link to="/tds-compliance">TDS Compliance</Link></li>
-                <li><Link to="/income-tax-compliance">Income Tax Compliance</Link></li>
+              <ul className="pcoded-submenu" style={{ display: activeMenu === 'taxation' ? 'block' : 'none' }}>
+                <li className={isActive('/gst-compliance') ? 'active' : ''}>
+                  <Link to="/gst-compliance">GST Compliance</Link>
+                </li>
+                <li className={isActive('/tds-compliance') ? 'active' : ''}>
+                  <Link to="/tds-compliance">TDS Compliance</Link>
+                </li>
+                <li className={isActive('/income-tax-compliance') ? 'active' : ''}>
+                  <Link to="/income-tax-compliance">Income Tax Compliance</Link>
+                </li>
               </ul>
             </li>
 
-            <li className="nav-item">
+            <li className={`nav-item ${isActive('/manage-ledger') ? 'active' : ''}`}>
               <Link to="/manage-ledger" className="nav-link">
                 <span className="pcoded-micon"><FiHome /></span>
                 <span className="pcoded-mtext">Ledger</span>
@@ -146,18 +201,27 @@ const Sidebar = ({ user, collapsed, activePage }) => {
             </li>
 
             <li className={`nav-item pcoded-hasmenu ${activeMenu === 'hr' ? 'pcoded-trigger' : ''}`}>
-              <a href="#!" className="nav-link" onClick={() => toggleMenu('hr')}>
+              <a href="#!" className="nav-link" onClick={(e) => {
+                e.preventDefault();
+                toggleMenu('hr');
+              }}>
                 <span className="pcoded-micon"><FiUsers /></span>
                 <span className="pcoded-mtext">HR</span>
               </a>
-              <ul className="pcoded-submenu">
-                <li><Link to="/view_employees">Employee</Link></li>
-                <li><Link to="/view_attendence">Attendance</Link></li>
-                <li><Link to="/payroll">Payrolls</Link></li>
+              <ul className="pcoded-submenu" style={{ display: activeMenu === 'hr' ? 'block' : 'none' }}>
+                <li className={isActive('/view_employees') ? 'active' : ''}>
+                  <Link to="/view_employees">Employee</Link>
+                </li>
+                <li className={isActive('/view_attendence') ? 'active' : ''}>
+                  <Link to="/view_attendence">Attendance</Link>
+                </li>
+                <li className={isActive('/payroll') ? 'active' : ''}>
+                  <Link to="/payroll">Payrolls</Link>
+                </li>
               </ul>
             </li>
 
-            <li className="nav-item">
+            <li className={`nav-item ${isActive('/reports') ? 'active' : ''}`}>
               <Link to="/reports" className="nav-link">
                 <span className="pcoded-micon"><FaFileAlt /></span>
                 <span className="pcoded-mtext">Reports</span>
@@ -165,20 +229,41 @@ const Sidebar = ({ user, collapsed, activePage }) => {
             </li>
 
             <li className={`nav-item pcoded-hasmenu ${activeMenu === 'settings' ? 'pcoded-trigger' : ''}`}>
-              <a href="#!" className="nav-link" onClick={() => toggleMenu('settings')}>
+              <a href="#!" className="nav-link" onClick={(e) => {
+                e.preventDefault();
+                toggleMenu('settings');
+              }}>
                 <span className="pcoded-micon"><FiUsers /></span>
                 <span className="pcoded-mtext">Settings</span>
               </a>
-              <ul className="pcoded-submenu">
-                <li><Link to="/all_invoices">Change Template</Link></li>
-                <li><Link to="/change-format">Change Format</Link></li>
-                <li><Link to="/invoice-settings">Invoice Settings</Link></li>
-                <li><Link to="/expense-settings">Expense Settings</Link></li>
-                <li><Link to="/sector-settings">Sector Settings</Link></li>
-                <li><Link to="/inventory-settings">Inventory Settings</Link></li>
-                <li><Link to="/merge-products">Merge Products</Link></li>
-                <li><Link to="/merge-buyers">Merge Buyers</Link></li>
-                <li><Link to="/merge-sellers">Merge Sellers</Link></li>
+              <ul className="pcoded-submenu" style={{ display: activeMenu === 'settings' ? 'block' : 'none' }}>
+                <li className={isActive('/all_invoices') ? 'active' : ''}>
+                  <Link to="/all_invoices">Change Template</Link>
+                </li>
+                <li className={isActive('/change-format') ? 'active' : ''}>
+                  <Link to="/change-format">Change Format</Link>
+                </li>
+                <li className={isActive('/invoice-settings') ? 'active' : ''}>
+                  <Link to="/invoice-settings">Invoice Settings</Link>
+                </li>
+                <li className={isActive('/expense-settings') ? 'active' : ''}>
+                  <Link to="/expense-settings">Expense Settings</Link>
+                </li>
+                <li className={isActive('/sector-settings') ? 'active' : ''}>
+                  <Link to="/sector-settings">Sector Settings</Link>
+                </li>
+                <li className={isActive('/inventory-settings') ? 'active' : ''}>
+                  <Link to="/inventory-settings">Inventory Settings</Link>
+                </li>
+                <li className={isActive('/merge-products') ? 'active' : ''}>
+                  <Link to="/merge-products">Merge Products</Link>
+                </li>
+                <li className={isActive('/merge-buyers') ? 'active' : ''}>
+                  <Link to="/merge-buyers">Merge Buyers</Link>
+                </li>
+                <li className={isActive('/merge-sellers') ? 'active' : ''}>
+                  <Link to="/merge-sellers">Merge Sellers</Link>
+                </li>
               </ul>
             </li>
           </ul>
