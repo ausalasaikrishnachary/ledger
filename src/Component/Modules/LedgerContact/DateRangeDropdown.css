@@ -1,0 +1,15 @@
+.date-range-wrapper {
+  cursor: pointer;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  padding: 6px 12px;
+  background-color: white;
+  display: inline-block;
+}
+
+.date-range-display {
+  display: flex;
+  align-items: center;
+  font-size: 0.95rem;
+  color: #495057;
+}

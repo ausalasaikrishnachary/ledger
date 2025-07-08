@@ -1,0 +1,32 @@
+.view-customers-container {
+  padding: 20px;
+  background-color: #f4f4f4;
+  min-height: 100vh;
+}
+
+.view-customers-controls .date-range-picker {
+  width: 300px;
+}
+
+.customer-link {
+  font-weight: 600;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.customer-link:hover {
+  text-decoration: underline;
+}
+
+.update-pan-link {
+  color: #00bcd4;
+  text-decoration: none;
+}
+
+.update-pan-link:hover {
+  text-decoration: underline;
+}
+
+.view-customers-table {
+  background-color: #ffffff;
+}
