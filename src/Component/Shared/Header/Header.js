@@ -7,7 +7,7 @@ const Header = ({ user, toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
   return (
-    <header className="navbar pcoded-header navbar-expand-lg navbar-light header-dark" style={{backgroundColor:'black'}}>
+    <header className="navbar pcoded-header navbar-expand-lg navbar-light header-dark" style={{ backgroundColor: 'black' }}>
       <div className="m-header">
         <button className="mobile-menu" id="mobile-collapse" onClick={toggleSidebar}>
           <FiMenu />
@@ -16,9 +16,9 @@ const Header = ({ user, toggleSidebar }) => {
           <img src={Logo} alt="" className="logo" width="87px" />
           <img src="assets/images/logo-icon.png" alt="" className="logo-thumb" />
         </Link> */}
-        <button className="mob-toggler">
+        {/* <button className="mob-toggler">
           <FiMoreVertical />
-        </button>
+        </button> */}
       </div>
       <div className="collapse navbar-collapse">
         <ul className="navbar-nav ml-auto">
@@ -27,15 +27,29 @@ const Header = ({ user, toggleSidebar }) => {
               <button className="dropdown-toggle" onClick={() => setDropdownOpen(!dropdownOpen)}>
                 <FiUser />
               </button>
-              <div className={`dropdown-menu dropdown-menu-right profile-notification ${dropdownOpen ? 'show' : ''}`}>
-                <div className="pro-head">
+              <div
+                className={`dropdown-menu dropdown-menu-right profile-notification ${dropdownOpen ? 'show' : ''}`}
+                style={{
+                  right: 0,
+                  left: 'auto',
+                  minWidth: '220px',
+                  maxWidth: '90vw',
+                  overflow: 'hidden',
+                  zIndex: 1050,
+                  top: '100%',
+                  marginTop: '0.5rem',
+                  position: 'absolute',
+                }}
+              >
+
+                {/* <div className="pro-head">
                   {user && (
                     <>
                       <img src={user.logoimage} className="img-radius" alt="User-Profile-Image" />
                       <span>{user.name}</span>
                     </>
                   )}
-                </div>
+                </div> */}
                 <ul className="pro-body">
                   <li><Link to="/profile" className="dropdown-item"><FiUser /> Profile</Link></li>
                   <li><Link to="/manage-business" className="dropdown-item"><FiSettings /> Settings</Link></li>
