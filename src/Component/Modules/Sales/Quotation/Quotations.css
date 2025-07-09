@@ -1,0 +1,26 @@
+.quotation-container {
+  background: #fff;
+  border: 1px solid #d1d1d1;
+  border-radius: 4px;
+  box-shadow: 0px 1px 4px rgba(0,0,0,0.1);
+  font-size: 14px;
+      width: 95%;
+    margin: 10px auto ;
+}
+
+.table th, .table td {
+  vertical-align: middle;
+}
+
+input[type="text"] {
+  max-width: 250px;
+}
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}

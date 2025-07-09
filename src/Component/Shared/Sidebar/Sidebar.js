@@ -28,12 +28,15 @@ const Sidebar = ({ user, collapsed, activePage }) => {
       setActiveMenu('contacts');
     } else if (path.startsWith('/manage-products')) {
       setActiveMenu('inventory');
-    } else if (path.startsWith('/view-invoices') || 
-               path.startsWith('/manage-receipt') || 
-               path.startsWith('/view-quotation') || 
+    } else if (path.startsWith('/invoices') || 
+               path.startsWith('/receipts') || 
+               path.startsWith('/quotations') || 
+                 path.startsWith('/billOfSupply') || 
+               path.startsWith('/creditNote') || 
+                 path.startsWith('/deliveryChallan') || 
                path.startsWith('/manage_receivables')) {
       setActiveMenu('sales');
-    } else if (path.startsWith('/view-purchase-invoices') || 
+    } else if (path.startsWith('/purchaseInvoice') || 
                path.startsWith('/manage-voucher') || 
                path.startsWith('/view-accounts-payables')) {
       setActiveMenu('purchases');
@@ -118,11 +121,11 @@ const Sidebar = ({ user, collapsed, activePage }) => {
                 <span className="pcoded-mtext">Inventory</span>
               </a>
               <ul className="pcoded-submenu" style={{ display: activeMenu === 'inventory' ? 'block' : 'none' }}>
-                <li className={isActive('/manage-products') ? 'active' : ''}>
+                <li className={isActive('/sales-items') ? 'active' : ''}>
                   {/* <Link to="/manage-products?type=Sales Catalog">Sales Catalog</Link> */}
                    <Link to="/sales-items">Sales Catalog</Link>
                 </li>
-                <li className={isActive('/manage-products') ? 'active' : ''}>
+                <li className={isActive('/purchased-items') ? 'active' : ''}>
                   {/* <Link to="/manage-products?type=Purchased Items">Purchased Items</Link> */}
                    <Link to="/purchased-items">Purchased Items</Link>
                 </li>
@@ -138,17 +141,22 @@ const Sidebar = ({ user, collapsed, activePage }) => {
                 <span className="pcoded-mtext">Sales</span>
               </a>
               <ul className="pcoded-submenu" style={{ display: activeMenu === 'sales' ? 'block' : 'none' }}>
-                <li className={isActive('/view-invoices') ? 'active' : ''}>
-                  <Link to="/view-invoices">Invoices</Link>
+                <li className={isActive('/invoices') ? 'active' : ''}>
+                  <Link to="/invoices">Invoices</Link>
                 </li>
-                <li className={isActive('/manage-receipt') ? 'active' : ''}>
-                  <Link to="/manage-receipt">Receipts</Link>
+                <li className={isActive('/receipts') ? 'active' : ''}>
+                  <Link to="/receipts">Receipts</Link>
                 </li>
-                <li className={isActive('/view-quotation') ? 'active' : ''}>
-                  <Link to="/view-quotation">Quotation</Link>
+                <li className={isActive('/quotations') ? 'active' : ''}>
+                  <Link to="/quotations">Quotations</Link>
                 </li>
-                <li className={isActive('/manage_receivables') ? 'active' : ''}>
-                  <Link to="/manage_receivables">Receivables</Link>
+                <li className={isActive('/billOfSupply') ? 'active' : ''}>
+                  <Link to="/billOfSupply">Bill Of Supply</Link>
+                </li>
+                 <li className={isActive('/creditNote') ? 'active' : ''}>
+                  <Link to="/creditNote">Credit Note</Link>
+                </li> <li className={isActive('/deliveryChallan') ? 'active' : ''}>
+                  <Link to="/deliveryChallan">Delivery Challan</Link>
                 </li>
               </ul>
             </li>
@@ -162,8 +170,8 @@ const Sidebar = ({ user, collapsed, activePage }) => {
                 <span className="pcoded-mtext">Purchases</span>
               </a>
               <ul className="pcoded-submenu" style={{ display: activeMenu === 'purchases' ? 'block' : 'none' }}>
-                <li className={isActive('/view-purchase-invoices') ? 'active' : ''}>
-                  <Link to="/view-purchase-invoices">Purchase Invoices</Link>
+                <li className={isActive('/purchaseInvoice') ? 'active' : ''}>
+                  <Link to="/purchaseInvoice">Purchase Invoices</Link>
                 </li>
                 <li className={isActive('/manage-voucher') ? 'active' : ''}>
                   <Link to="/manage-voucher">Expense Vouchers</Link>
