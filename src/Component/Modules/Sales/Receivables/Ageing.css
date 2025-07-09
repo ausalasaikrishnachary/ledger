@@ -1,0 +1,25 @@
+.receivables-container {
+  padding: 20px;
+  border-radius: 6px;
+}
+
+.nav-tabs .nav-link {
+  color: #0db8de;
+  border: none;
+  background-color: transparent;
+}
+
+.nav-tabs .nav-link.active {
+  border-bottom: 2px solid #0db8de;
+  color: #0db8de;
+  font-weight: 500;
+}
+
+.table-controls {
+  padding: 10px 0;
+}
+
+.table td,
+.table th {
+  vertical-align: middle;
+}
