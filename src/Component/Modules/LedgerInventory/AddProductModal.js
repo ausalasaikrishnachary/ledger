@@ -2,9 +2,20 @@
 import React from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import { BsPlus } from "react-icons/bs";
+import AddCompanyModal from "./AddCompanyModal";
+import AddCategoryModal from "./AddCategoryModal";
+import { useState } from "react";
 
 const AddProductModal = ({ show, onClose }) => {
+
+    const [showCompanyModal, setShowCompanyModal] = useState(false);
+const [companyOptions, setCompanyOptions] = useState([]);
+
+const [showCategoryModal, setShowCategoryModal] = useState(false);
+const [categoryOptions, setCategoryOptions] = useState([]);
+
   return (
+    <>
     <Modal show={show} onHide={onClose} size="lg" backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>Add Products</Modal.Title>
@@ -19,9 +30,9 @@ const AddProductModal = ({ show, onClose }) => {
               <Form.Select className="me-1">
                 <option>Select Category</option>
               </Form.Select>
-              <Button variant="outline-primary" size="sm">
-                <BsPlus />
-              </Button>
+             <Button variant="outline-primary" size="sm" onClick={() => setShowCategoryModal(true)}>
+  <BsPlus />
+</Button>
             </div>
           </div>
 
@@ -30,9 +41,9 @@ const AddProductModal = ({ show, onClose }) => {
               <Form.Select className="me-1">
                 <option>Company Name</option>
               </Form.Select>
-              <Button variant="outline-primary" size="sm">
-                <BsPlus />
-              </Button>
+             <Button variant="outline-primary" size="sm" onClick={() => setShowCompanyModal(true)}>
+  <BsPlus />
+</Button>
             </div>
             <div className="col">
               <Form.Control placeholder="Price" />
@@ -100,16 +111,34 @@ const AddProductModal = ({ show, onClose }) => {
             </div>
           </div>
 
+
+
           <Form.Group className="mb-3">
             <Form.Control as="textarea" rows={2} placeholder="Description" />
           </Form.Group>
         </Form>
       </Modal.Body>
+
+
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>Close</Button>
         <Button variant="primary">Submit</Button>
       </Modal.Footer>
     </Modal>
+         <AddCompanyModal
+  show={showCompanyModal}
+  onClose={() => setShowCompanyModal(false)}
+  onSave={(newCompany) => setCompanyOptions([...companyOptions, newCompany])}
+/>
+
+<AddCategoryModal
+  show={showCategoryModal}
+  onClose={() => setShowCategoryModal(false)}
+  onSave={(newCategory) => setCategoryOptions([...categoryOptions, newCategory])}
+/>
+
+
+</>
   );
 };
 

@@ -5,6 +5,9 @@ import Header from '../../Shared/Header/Header';
 import './PurchasedItems.css';
 import AddProductModal from './AddProductModal'; // Import the modal component
 import AddServiceModal from './AddServiceModal';
+import AddStockModal from './AddStockModal';
+import DeductStockModal from './DeductStockModal';
+import StockDetailsModal from './StockDetailsModal';
 
 
 const PurchasedItems = ({ user }) => {
@@ -13,6 +16,21 @@ const PurchasedItems = ({ user }) => {
   const [search, setSearch] = useState('');
   const [showProductModal, setShowProductModal] = useState(false);
   const [showServiceModal, setShowServiceModal] = useState(false);
+
+   const [showStockModal, setShowStockModal] = useState(false);
+  const [stock, setStock] = useState(10); // initial value
+  
+  const [showDeductModal, setShowDeductModal] = useState(false);
+  // const [stock, setStock] = useState(10);
+  
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [stockData, setStockData] = useState({
+    productName: "iPhone 16",
+    openingStock: 10,
+    stockIn: 5,
+    stockOut: 0,
+    availableStock: 15
+  });
 
   const items = [
     // {
@@ -38,6 +56,7 @@ const PurchasedItems = ({ user }) => {
   );
 
   return (
+    <>
     <div className="dashboard-container">
       <Header 
         user={user} 
@@ -171,9 +190,21 @@ const PurchasedItems = ({ user }) => {
                         <td>
                           <FaEdit className="text-success me-2 action-icon" title="Edit" />
                           <FaTrash className="text-danger me-2 action-icon" title="Delete" />
-                          <FaPlusCircle className="text-warning me-2 action-icon" title="Add" />
-                          <FaMinusCircle className="text-danger me-2 action-icon" title="Remove" />
-                          <FaEye className="text-primary action-icon" title="View" />
+                           <FaPlusCircle
+                            className="text-warning me-2 action-icon"
+                            title="Add"
+                            onClick={() => setShowStockModal(true)}
+                          />
+                                                    <FaMinusCircle
+                            className="text-danger me-2 action-icon"
+                            title="Remove"
+                            onClick={() => setShowDeductModal(true)}
+                          />
+                                                    <FaEye
+                            className="text-primary action-icon"
+                            title="View"
+                            onClick={() => setShowViewModal(true)}
+                          />
                         </td>
                       </tr>
                     ))}
@@ -200,7 +231,7 @@ const PurchasedItems = ({ user }) => {
                       <li className="page-item disabled">
                         <span className="page-link">Next</span>
                       </li>
-                    </ul>
+                    </ul> 
                   </nav>
                 </div>
               </div>
@@ -214,7 +245,29 @@ const PurchasedItems = ({ user }) => {
           </div>
         </div>
       </div>
-    </div>
+        </div>
+
+              <AddStockModal
+  show={showStockModal}
+  onClose={() => setShowStockModal(false)}
+  currentStock={stock}
+  onSave={({ quantity }) => setStock(prev => prev + quantity)}
+/>
+
+<DeductStockModal
+  show={showDeductModal}
+  onClose={() => setShowDeductModal(false)}
+  currentStock={stock}
+  onSave={({ quantity }) => setStock(prev => prev - quantity)}
+/>
+
+<StockDetailsModal
+  show={showViewModal}
+  onClose={() => setShowViewModal(false)}
+  stockData={stockData}
+/>
+
+</>
   );
 };
 
