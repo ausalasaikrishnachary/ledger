@@ -7,6 +7,9 @@ import ViewCustomers from './Component/Modules/LedgerContact/ViewCustomers';
 import ViewSuppliers from './Component/Modules/LedgerContact/ViewSuppliers';
 import AddCustomer from './Component/Modules/LedgerContact/AddCustomers';
 import AddSupplier from './Component/Modules/LedgerContact/AddSuppliers';
+import PurchasedItems from './Component/Modules/LedgerInventory/PurchasedItems';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import SalesItems from './Component/Modules/LedgerInventory/SalesItems';
 
 function App() {
   return (
@@ -19,6 +22,8 @@ function App() {
           <Route path="/view-suppliers" element={<ViewSuppliers />} />
           <Route path="/add-customer" element={<AddCustomer />} />
           <Route path="/add-supplier" element={<AddSupplier />} />
+           <Route path="/purchased-items" element={<PurchasedItems />} />
+            <Route path="/sales-items" element={<SalesItems />} />
         </Routes>
       </div>
     </Router>

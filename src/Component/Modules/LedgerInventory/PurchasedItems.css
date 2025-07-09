@@ -1,0 +1,13 @@
+.purchased-items-wrapper .action-icon {
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+.purchased-items-wrapper .datepicker {
+  max-width: 250px;
+}
+
+.summary-box {
+  max-width: 300px;
+  float: right;
+}
