@@ -36,7 +36,7 @@ const Sidebar = ({ user, collapsed, activePage }) => {
                  path.startsWith('/deliveryChallan') || 
                path.startsWith('/manage_receivables')) {
       setActiveMenu('sales');
-    } else if (path.startsWith('/view-purchase-invoices') || 
+    } else if (path.startsWith('/purchaseInvoice') || 
                path.startsWith('/manage-voucher') || 
                path.startsWith('/view-accounts-payables')) {
       setActiveMenu('purchases');
@@ -170,8 +170,8 @@ const Sidebar = ({ user, collapsed, activePage }) => {
                 <span className="pcoded-mtext">Purchases</span>
               </a>
               <ul className="pcoded-submenu" style={{ display: activeMenu === 'purchases' ? 'block' : 'none' }}>
-                <li className={isActive('/view-purchase-invoices') ? 'active' : ''}>
-                  <Link to="/view-purchase-invoices">Purchase Invoices</Link>
+                <li className={isActive('/purchaseInvoice') ? 'active' : ''}>
+                  <Link to="/purchaseInvoice">Purchase Invoices</Link>
                 </li>
                 <li className={isActive('/manage-voucher') ? 'active' : ''}>
                   <Link to="/manage-voucher">Expense Vouchers</Link>
