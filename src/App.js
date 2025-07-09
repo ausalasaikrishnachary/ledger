@@ -28,16 +28,16 @@ import SalesItems from './Component/Modules/LedgerInventory/SalesItems';
 
 // Purchase
 
-import DebitNote from './Component/Modules/Purchases/DebitNote/DebitNote'
-import Payable from './Component/Modules/Purchases/Payables/Payable'
-import PurchaseInvoice from './Component/Modules/Purchases/PurchaseInvoices/PurchaseInvoice'
-import PurchaseOrder from './Component/Modules/Purchases/PurchaseOrder/PurchaseOrder'
-import Voucher from './Component/Modules/Purchases/Voucher/Voucher'
+import DebitNote from './Component/Modules/purchases/DebitNote/DebitNote';
+import Payable from './Component/Modules/purchases/Payables/Payable';
+// import PurchaseInvoice from './Component/Modules/purchases/PurchaseInvoices/PurchaseInvoice';
+// import PurchaseOrder from './Component/Modules/Purchases/PurchaseOrder/PurchaseOrder';
+import Voucher from './Component/Modules/purchases/Voucher/Voucher';
 
-import PuchaseAgeing from './Component/Modules/Purchases/Payables/Ageing'
-import OverduePayables from './Component/Modules/Purchases/Payables/OverduePayables'
-import PartyWisePayables from './Component/Modules/Purchases/Payables/PartyWisePayables'
-import UpcomingPayables from './Component/Modules/Purchases/Payables/UpcomingPayables'
+import PuchaseAgeing from './Component/Modules/purchases/Payables/Ageing';
+import OverduePayables from './Component/Modules/purchases/Payables/OverduePayables';
+import PartyWisePayables from './Component/Modules/purchases/Payables/PartyWisePayables';
+import UpcomingPayables from './Component/Modules/purchases/Payables/UpcomingPayables';
 
 
 
@@ -66,13 +66,13 @@ function App() {
            <Route path="/purchased-items" element={<PurchasedItems />} />
             <Route path="/sales-items" element={<SalesItems />} />
 
-          // Purchase
+
 
 
      <Route path="/debitNote" element={<DebitNote />} />
           <Route path="/payables" element={<Payable />} />
-           <Route path="/purchaseInvoice" element={<PurchaseInvoice />} />
-            <Route path="/purchaseOrder" element={<PurchaseOrder />} />
+           {/* <Route path="/purchaseInvoice" element={<PurchaseInvoice />} />
+            <Route path="/purchaseOrder" element={<PurchaseOrder />} /> */}
             <Route path="/voucher" element={<Voucher />} />
 
                 <Route path="/puchaseAgeing" element={<PuchaseAgeing />} />
