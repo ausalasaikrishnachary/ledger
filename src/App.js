@@ -20,6 +20,10 @@ import PartyWiseReceivables from './Component/Modules/Sales/Receivables/PartyWis
 import UpcomingReveivables from './Component/Modules/Sales/Receivables/UpcomingReveivables'
 
 
+import PurchasedItems from './Component/Modules/LedgerInventory/PurchasedItems';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import SalesItems from './Component/Modules/LedgerInventory/SalesItems';
+
 function App() {
   return (
     <Router>
@@ -45,6 +49,8 @@ function App() {
 
 
 
+           <Route path="/purchased-items" element={<PurchasedItems />} />
+            <Route path="/sales-items" element={<SalesItems />} />
         </Routes>
       </div>
     </Router>
