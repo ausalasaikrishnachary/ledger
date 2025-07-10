@@ -110,68 +110,82 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import TableLayout from '../../Layout/TableLayout/TableLayout';
+import axios from 'axios';
+
 const ViewSuppliers = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [suppliers, setSuppliers] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchSuppliers();
+  }, []);
+
+ const fetchSuppliers = async () => {
+  try {
+    const res = await axios.get("http://localhost:5001/accounts");
+
+    const formatted = res.data
+      .filter((supplier) => supplier.group === "supplier") // ✅ Only include suppliers
+      .map((supplier) => ({
+        name: (
+          <>
+            <a href="#" className="customer-link">{supplier.name}</a>
+            <div>{supplier.business_name}</div>
+          </>
+        ),
+        contact: (
+          <>
+            <div>{supplier.mobile_number}</div>
+            <div>{supplier.email}</div>
+          </>
+        ),
+        taxInfo: (
+          <>
+            <div>PAN: <a href="#" className="update-pan-link">Update PAN</a></div>
+            <div>GSTIN: {supplier.gstin}</div>
+          </>
+        ),
+        created: (
+          <>
+            <div>{supplier.created_by || 'Admin'}</div>
+            <div>{supplier.created_at ? new Date(supplier.created_at).toISOString().split('T')[0] : 'N/A'}</div>
+          </>
+        )
+      }));
+
+    setSuppliers(formatted);
+  } catch (err) {
+    console.error("Error fetching suppliers:", err);
+  }
+};
+
 
   const handleAddSupplier = () => {
     navigate('/add-supplier');
   };
 
   const handleEditSupplier = (supplier) => {
-    // Handle edit logic here
     console.log('Editing supplier:', supplier);
   };
 
   const handleDeleteSupplier = (supplier) => {
-    // Handle delete logic here
     console.log('Deleting supplier:', supplier);
   };
 
   const handleDownloadReport = () => {
-    // Handle download logic here
     console.log('Downloading report');
   };
 
   const handleDateRangeChange = (range) => {
-    // Handle date range change logic here
     console.log('Selected Range:', range);
   };
-
-  const suppliers = [
-    {
-      name: (
-        <>
-          <a href="#" className="customer-link">santosh</a>
-          <div>Wipro Limited</div>
-        </>
-      ),
-      contact: (
-        <>
-          <div>6360395837</div>
-          <div>sumukhurs7@gmail.com</div>
-        </>
-      ),
-      taxInfo: (
-        <>
-          <div>PAN: <a href="#" className="update-pan-link">Update PAN</a></div>
-          <div>GSTIN: 33GSPTN1882G1Z3</div>
-        </>
-      ),
-      created: (
-        <>
-          <div>iiiQbets</div>
-          <div>2025-07-07</div>
-        </>
-      )
-    }
-  ];
 
   const columns = ['NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
 

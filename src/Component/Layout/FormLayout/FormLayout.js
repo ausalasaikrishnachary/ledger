@@ -58,7 +58,8 @@ export const FormSection = ({
   onBack, 
   onNext, 
   nextLabel,
-  isLast = false 
+  isLast = false,
+  onSubmit 
 }) => {
   return (
     <div className={`card customer-form-card ${activeTab === id ? 'active-section' : ''}`}>
@@ -91,6 +92,7 @@ export const FormSection = ({
             type="submit" 
             variant="primary" 
             className="customer-submit-btn"
+            onClick={onSubmit}
           >
             Submit
           </Button>

@@ -114,12 +114,15 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
 import './ViewCustomers.css';
 import TableLayout from '../../Layout/TableLayout/TableLayout';
+import axios from 'axios';
+
+
 const ViewCustomers = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const navigate = useNavigate();
@@ -153,48 +156,66 @@ const ViewCustomers = ({ user }) => {
     console.log('Selected Range:', range);
   };
 
-  const customers = [
-    {
-      name: (
-        <>
-          <a href="#" className="customer-link">uma</a>
-          <div>MORGAN STANLEY INDIA COMPANY PRIVATE LIMITED</div>
-        </>
-      ),
-      contact: (
-        <>
-          <div>1122334455</div>
-          <div>uma@gmail.com</div>
-        </>
-      ),
-      taxInfo: (
-        <>
-          <div>PAN: <a href="#" className="update-pan-link">Update PAN</a></div>
-          <div>GSTIN: 33GSPTN1882G1Z3</div>
-        </>
-      ),
-      created: (
-        <>
-          <div>iiiQbets</div>
-          <div>2025-07-07</div>
-        </>
-      )
-    }
-  ];
+  const [customers, setCustomers] = useState([]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
+
+  const fetchCustomers = async () => {
+  try {
+    const response = await axios.get("http://localhost:5001/accounts");
+
+    const formattedCustomers = response.data
+      .filter((cust) => cust.group === "customer") // ✅ Filter by group
+      .map((cust) => ({
+        name: (
+          <>
+            <a href="#" className="customer-link">{cust.name}</a>
+            <div>{cust.business_name}</div>
+          </>
+        ),
+        contact: (
+          <>
+            <div>{cust.mobile_number}</div>
+            <div>{cust.email}</div>
+          </>
+        ),
+        taxInfo: (
+          <>
+            <div>PAN: <a href="#" className="update-pan-link">Update PAN</a></div>
+            <div>GSTIN: {cust.gstin}</div>
+          </>
+        ),
+        created: (
+          <>
+            <div>{cust.created_by || 'Admin'}</div>
+            <div>{cust.created_at ? new Date(cust.created_at).toISOString().split('T')[0] : 'N/A'}</div>
+          </>
+        )
+      }));
+
+    setCustomers(formattedCustomers);
+  } catch (error) {
+    console.error("Error fetching customers:", error);
+  }
+};
+
+
 
   const columns = ['NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
 
   return (
     <div className="dashboard-container">
-      <Header 
-        user={user} 
-        toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} 
+      <Header
+        user={user}
+        toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
       <div className="content-wrapper">
         <div className={`pcoded-navbar ${sidebarCollapsed ? 'navbar-collapsed' : ''}`}>
-          <Sidebar 
-            user={user} 
-            collapsed={sidebarCollapsed} 
+          <Sidebar
+            user={user}
+            collapsed={sidebarCollapsed}
           />
         </div>
         <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
