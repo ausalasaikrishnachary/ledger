@@ -564,10 +564,12 @@ const AddSupplierForm = ({ user }) => {
         id="information"
         activeTab={activeTab}
         title="Information"
-        onNext={{ 
-          action: () => handleTabClick('banking'),
-          label: 'Banking & Taxes' 
-        }}
+        // onNext={{ 
+        //   action: () => handleTabClick('banking'),
+        //   label: 'Banking & Taxes' 
+        // }}
+         onNext={() => handleTabClick('banking')}
+        nextLabel="Banking & Taxes"
       >
         <div className="row">
           {/* Left Column */}
@@ -661,10 +663,12 @@ const AddSupplierForm = ({ user }) => {
         activeTab={activeTab}
         title="Banking & Taxes"
         onBack={() => handleTabClick('information')}
-        onNext={{ 
-          action: () => handleTabClick('shipping'),
-          label: 'Shipping Address' 
-        }}
+        // onNext={{ 
+        //   action: () => handleTabClick('shipping'),
+        //   label: 'Shipping Address' 
+        // }}
+         onNext={() => handleTabClick('shipping')}
+        nextLabel="Shipping Address"
       >
         {/* Account Information Section */}
         <div className="mb-4">
@@ -800,10 +804,12 @@ const AddSupplierForm = ({ user }) => {
         activeTab={activeTab}
         title="Shipping Address"
         onBack={() => handleTabClick('banking')}
-        onNext={{ 
-          action: () => handleTabClick('billing'),
-          label: 'Billing Address' 
-        }}
+        // onNext={{ 
+        //   action: () => handleTabClick('billing'),
+        //   label: 'Billing Address' 
+        // }}
+          onNext={() => handleTabClick('billing')}
+        nextLabel="Billing Address"
       >
         <div className="row">
           <div className="col-md-6">
