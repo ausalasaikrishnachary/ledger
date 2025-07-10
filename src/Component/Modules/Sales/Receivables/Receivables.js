@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import Ageing from './Receivables/Ageing';
-import OverdueReceivables from './Receivables/OverdueReceivables';
-import PartyWiseReceivables from './Receivables/PartyWiseReceivables';
-import UpcomingReveivables from './Receivables/UpcomingReveivables';
+import Ageing from '../Receivables/Ageing';
+import OverdueReceivables from '../Receivables/OverdueReceivables';
+import PartyWiseReceivables from '../Receivables/PartyWiseReceivables';
+import UpcomingReveivables from '../Receivables/UpcomingReveivables';
 import '../Sales.css';
 
 const Receivables = () => {

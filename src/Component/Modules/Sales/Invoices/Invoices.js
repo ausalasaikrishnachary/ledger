@@ -124,7 +124,8 @@ import OverdueReceivables from '../Receivables/OverdueReceivables';
 import PartyWiseReceivables from '../Receivables/PartyWiseReceivables';
 import UpcomingReveivables from '../Receivables/UpcomingReveivables';
 import '../Sales.css';
-
+// import Receivables from '../Receivables/Receivables';
+import Receivables from '../Receivables/Receivables';
 const AddSales = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('invoices');
@@ -235,43 +236,43 @@ const AddSales = ({ user }) => {
   );
 
   // Receivables component with nested tabs
-  const Receivables = () => (
-    <div className="quotation-container p-3">
-      <div className="receivables-tabs mb-4">
-        <div 
-          className={`receivables-subtab ${activeReceivablesTab === 'ageing' ? 'active' : ''}`}
-          onClick={() => handleReceivablesTabClick('ageing')}
-        >
-          Ageing
-        </div>
-        <div 
-          className={`receivables-subtab ${activeReceivablesTab === 'overdue' ? 'active' : ''}`}
-          onClick={() => handleReceivablesTabClick('overdue')}
-        >
-          OverdueReceivables
-        </div>
-        <div 
-          className={`receivables-subtab ${activeReceivablesTab === 'partyWise' ? 'active' : ''}`}
-          onClick={() => handleReceivablesTabClick('partyWise')}
-        >
-          PartyWiseReceivables
-        </div>
-        <div 
-          className={`receivables-subtab ${activeReceivablesTab === 'upcoming' ? 'active' : ''}`}
-          onClick={() => handleReceivablesTabClick('upcoming')}
-        >
-          UpcomingReveivables
-        </div>
-      </div>
+  // const Receivables = () => (
+  //   <div className="quotation-container p-3">
+  //     <div className="receivables-tabs mb-4">
+  //       <div 
+  //         className={`receivables-subtab ${activeReceivablesTab === 'ageing' ? 'active' : ''}`}
+  //         onClick={() => handleReceivablesTabClick('ageing')}
+  //       >
+  //         Ageing
+  //       </div>
+  //       <div 
+  //         className={`receivables-subtab ${activeReceivablesTab === 'overdue' ? 'active' : ''}`}
+  //         onClick={() => handleReceivablesTabClick('overdue')}
+  //       >
+  //         OverdueReceivables
+  //       </div>
+  //       <div 
+  //         className={`receivables-subtab ${activeReceivablesTab === 'partyWise' ? 'active' : ''}`}
+  //         onClick={() => handleReceivablesTabClick('partyWise')}
+  //       >
+  //         PartyWiseReceivables
+  //       </div>
+  //       <div 
+  //         className={`receivables-subtab ${activeReceivablesTab === 'upcoming' ? 'active' : ''}`}
+  //         onClick={() => handleReceivablesTabClick('upcoming')}
+  //       >
+  //         UpcomingReveivables
+  //       </div>
+  //     </div>
 
-      <div className="receivables-content">
-        {activeReceivablesTab === 'ageing' && <Ageing />}
-        {activeReceivablesTab === 'overdue' && <OverdueReceivables />}
-        {activeReceivablesTab === 'partyWise' && <PartyWiseReceivables />}
-        {activeReceivablesTab === 'upcoming' && <UpcomingReveivables />}
-      </div>
-    </div>
-  );
+  //     <div className="receivables-content">
+  //       {activeReceivablesTab === 'ageing' && <Ageing />}
+  //       {activeReceivablesTab === 'overdue' && <OverdueReceivables />}
+  //       {activeReceivablesTab === 'partyWise' && <PartyWiseReceivables />}
+  //       {activeReceivablesTab === 'upcoming' && <UpcomingReveivables />}
+  //     </div>
+  //   </div>
+  // );
 
   return (
     <div className="dashboard-container">
