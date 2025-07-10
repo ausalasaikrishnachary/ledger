@@ -125,7 +125,7 @@ import PartyWiseReceivables from '../Receivables/PartyWiseReceivables';
 import UpcomingReveivables from '../Receivables/UpcomingReveivables';
 import '../Sales.css';
 
-const AddSalesForm = ({ user }) => {
+const AddSales = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState('invoices');
   const [activeReceivablesTab, setActiveReceivablesTab] = useState('outstanding');
@@ -202,7 +202,7 @@ const AddSalesForm = ({ user }) => {
             entries
           </div>
           <div>
-            <input type="text" className="form-control" placeholder="Search" />
+            <input type="text" className="form-control searchbarr" placeholder="Search" />
           </div>
         </div>
 
@@ -347,4 +347,4 @@ const AddSalesForm = ({ user }) => {
   );
 };
 
-export default AddSalesForm;
+export default AddSales;

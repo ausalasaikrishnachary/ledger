@@ -1,3 +1,4 @@
+/* SalesLayout.css */
 .quotation-container {
   background: #fff;
   border: 1px solid #d1d1d1;
@@ -10,6 +11,6 @@
   vertical-align: middle;
 }
 
-/* input[type="text"] {
+.searchbarr {
   max-width: 250px;
-} */
+}

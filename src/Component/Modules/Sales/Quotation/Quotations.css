@@ -12,9 +12,9 @@
   vertical-align: middle;
 }
 
-input[type="text"] {
+/* input[type="text"] {
   max-width: 250px;
-}
+} */
 .spin-icon {
   animation: spin 1s linear infinite;
 }

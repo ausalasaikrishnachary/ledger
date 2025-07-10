@@ -1,33 +1,179 @@
+// import React, { useState } from 'react';
+// import { FaCalendarAlt, FaTrash, FaEdit } from 'react-icons/fa';
+// import { Button, Table, Form, Container } from 'react-bootstrap';
+// // import './ViewCustomers.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+// import Sidebar from '../../Shared/Sidebar/Sidebar';
+// import Header from '../../Shared/Header/Header';
+// import DateRangeDropdown from './DateRangeDropdown';
+// import { useNavigate } from 'react-router-dom';
+
+// const ViewSuppliers = ({ user }) => {
+//   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+//     const navigate = useNavigate();
+  
+//     const handleAddCustomer = () => {
+//       navigate('/add-supplier');
+//     };
+
+//   const customers = [
+//     {
+//       name: 'santosh',
+//       company: 'Wipro Limited',
+//       phone: '6360395837',
+//       email: 'sumukhurs7@gmail.com',
+//       pan: 'Update PAN',
+//       gstin: '33GSPTN1882G1Z3',
+//       createdBy: 'iiiQbets',
+//       createdDate: '2025-07-07'
+//     }
+//   ];
+
+//   return (
+//     <div className="dashboard-container">
+//       <Header 
+//         user={user} 
+//         toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} 
+//       />
+//       <div className="content-wrapper">
+//         <div className={`pcoded-navbar ${sidebarCollapsed ? 'navbar-collapsed' : ''}`}>
+//           <Sidebar 
+//             user={user} 
+//             collapsed={sidebarCollapsed} 
+//           />
+//         </div>
+//         <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
+//           <Container fluid className="p-3">
+//       <h2 className="mb-3">View Suppliers</h2>
+
+//       <div className="d-flex align-items-center mb-3 view-customers-controls">
+//         <div className="me-3">
+//   <DateRangeDropdown onChange={(range) => console.log('Selected Range:', range)} />
+// </div>
+//         <Button variant="info" className="me-auto text-white">Download Report</Button>
+//         <Button variant="success"  onClick={handleAddCustomer} >Add Supplier</Button>
+//       </div>
+
+//       <Table bordered striped responsive className="text-center view-customers-table">
+//         <thead className="table-dark">
+//           <tr>
+//             <th>NAME</th>
+//             <th>CONTACT INFO</th>
+//             <th>TAX INFORMATION</th>
+//             <th>CREATED BY</th>
+//             <th>ACTION</th>
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {customers.map((customer, index) => (
+//             <tr key={index}>
+//               <td>
+//                 <a href="#" className="customer-link">{customer.name}</a>
+//                 <div>{customer.company}</div>
+//               </td>
+//               <td>
+//                 <div>{customer.phone}</div>
+//                 <div>{customer.email}</div>
+//               </td>
+//               <td>
+//                 <div>PAN: <a href="#" className="update-pan-link">{customer.pan}</a></div>
+//                 <div>GSTIN: {customer.gstin}</div>
+//               </td>
+//               <td>
+//                 <div>{customer.createdBy}</div>
+//                 <div>{customer.createdDate}</div>
+//               </td>
+//               <td>
+//                 <Button variant="link" className="p-1 text-primary">
+//                   <FaEdit />
+//                 </Button>
+//                 <Button variant="link" className="p-1 text-danger">
+//                   <FaTrash />
+//                 </Button>
+//               </td>
+//             </tr>
+//           ))}
+//         </tbody>
+//       </Table>
+//         </Container>
+//         </div>
+//     </div>
+//     </div>
+//   );
+// };
+
+// export default ViewSuppliers;
+
+
+
+
+
+
+
 import React, { useState } from 'react';
-import { FaCalendarAlt, FaTrash, FaEdit } from 'react-icons/fa';
-import { Button, Table, Form, Container } from 'react-bootstrap';
-// import './ViewCustomers.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
-import DateRangeDropdown from './DateRangeDropdown';
-import { useNavigate } from 'react-router-dom';
-
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import TableLayout from '../../Layout/TableLayout/TableLayout';
 const ViewSuppliers = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-    const navigate = useNavigate();
-  
-    const handleAddCustomer = () => {
-      navigate('/add-supplier');
-    };
+  const navigate = useNavigate();
 
-  const customers = [
+  const handleAddSupplier = () => {
+    navigate('/add-supplier');
+  };
+
+  const handleEditSupplier = (supplier) => {
+    // Handle edit logic here
+    console.log('Editing supplier:', supplier);
+  };
+
+  const handleDeleteSupplier = (supplier) => {
+    // Handle delete logic here
+    console.log('Deleting supplier:', supplier);
+  };
+
+  const handleDownloadReport = () => {
+    // Handle download logic here
+    console.log('Downloading report');
+  };
+
+  const handleDateRangeChange = (range) => {
+    // Handle date range change logic here
+    console.log('Selected Range:', range);
+  };
+
+  const suppliers = [
     {
-      name: 'santosh',
-      company: 'Wipro Limited',
-      phone: '6360395837',
-      email: 'sumukhurs7@gmail.com',
-      pan: 'Update PAN',
-      gstin: '33GSPTN1882G1Z3',
-      createdBy: 'iiiQbets',
-      createdDate: '2025-07-07'
+      name: (
+        <>
+          <a href="#" className="customer-link">santosh</a>
+          <div>Wipro Limited</div>
+        </>
+      ),
+      contact: (
+        <>
+          <div>6360395837</div>
+          <div>sumukhurs7@gmail.com</div>
+        </>
+      ),
+      taxInfo: (
+        <>
+          <div>PAN: <a href="#" className="update-pan-link">Update PAN</a></div>
+          <div>GSTIN: 33GSPTN1882G1Z3</div>
+        </>
+      ),
+      created: (
+        <>
+          <div>iiiQbets</div>
+          <div>2025-07-07</div>
+        </>
+      )
     }
   ];
+
+  const columns = ['NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
 
   return (
     <div className="dashboard-container">
@@ -43,61 +189,19 @@ const ViewSuppliers = ({ user }) => {
           />
         </div>
         <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
-          <Container fluid className="p-3">
-      <h2 className="mb-3">View Suppliers</h2>
-
-      <div className="d-flex align-items-center mb-3 view-customers-controls">
-        <div className="me-3">
-  <DateRangeDropdown onChange={(range) => console.log('Selected Range:', range)} />
-</div>
-        <Button variant="info" className="me-auto text-white">Download Report</Button>
-        <Button variant="success"  onClick={handleAddCustomer} >Add Supplier</Button>
-      </div>
-
-      <Table bordered striped responsive className="text-center view-customers-table">
-        <thead className="table-dark">
-          <tr>
-            <th>NAME</th>
-            <th>CONTACT INFO</th>
-            <th>TAX INFORMATION</th>
-            <th>CREATED BY</th>
-            <th>ACTION</th>
-          </tr>
-        </thead>
-        <tbody>
-          {customers.map((customer, index) => (
-            <tr key={index}>
-              <td>
-                <a href="#" className="customer-link">{customer.name}</a>
-                <div>{customer.company}</div>
-              </td>
-              <td>
-                <div>{customer.phone}</div>
-                <div>{customer.email}</div>
-              </td>
-              <td>
-                <div>PAN: <a href="#" className="update-pan-link">{customer.pan}</a></div>
-                <div>GSTIN: {customer.gstin}</div>
-              </td>
-              <td>
-                <div>{customer.createdBy}</div>
-                <div>{customer.createdDate}</div>
-              </td>
-              <td>
-                <Button variant="link" className="p-1 text-primary">
-                  <FaEdit />
-                </Button>
-                <Button variant="link" className="p-1 text-danger">
-                  <FaTrash />
-                </Button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-        </Container>
+          <TableLayout
+            title="View Suppliers"
+            addButtonText="Add Supplier"
+            onAddClick={handleAddSupplier}
+            columns={columns}
+            data={suppliers}
+            onEdit={handleEditSupplier}
+            onDelete={handleDeleteSupplier}
+            onDownload={handleDownloadReport}
+            onDateRangeChange={handleDateRangeChange}
+          />
         </div>
-    </div>
+      </div>
     </div>
   );
 };
