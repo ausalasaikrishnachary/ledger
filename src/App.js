@@ -28,16 +28,18 @@ import SalesItems from './Component/Modules/LedgerInventory/SalesItems';
 
 // Purchase
 
-import DebitNote from './Component/Modules/Purchases/DebitNote/DebitNote'
-import Payable from './Component/Modules/Purchases/Payables/Payable'
-import PurchaseInvoice from './Component/Modules/Purchases/PurchaseInvoices/PurchaseInvoice'
-import PurchaseOrder from './Component/Modules/Purchases/PurchaseOrder/PurchaseOrder'
-import Voucher from './Component/Modules/Purchases/Voucher/Voucher'
+// Purchase
+import DebitNote from './Component/Modules/Purchases/DebitNote/DebitNote';
+import Payable from './Component/Modules/Purchases/Payables/Payable';
+import PurchaseInvoice from './Component/Modules/Purchases/PurchaseInvoices/PurchaseInvoice';
+import PurchaseOrder from './Component/Modules/Purchases/PurchaseOrder/PurchaseOrder';
+import Voucher from './Component/Modules/Purchases/Voucher/Voucher';
 
-import PuchaseAgeing from './Component/Modules/Purchases/Payables/Ageing'
-import OverduePayables from './Component/Modules/Purchases/Payables/OverduePayables'
-import PartyWisePayables from './Component/Modules/Purchases/Payables/PartyWisePayables'
-import UpcomingPayables from './Component/Modules/Purchases/Payables/UpcomingPayables'
+import PuchaseAgeing from './Component/Modules/Purchases/Payables/Ageing';
+import OverduePayables from './Component/Modules/Purchases/Payables/OverduePayables';
+import PartyWisePayables from './Component/Modules/Purchases/Payables/PartyWisePayables';
+import UpcomingPayables from './Component/Modules/Purchases/Payables/UpcomingPayables';
+
 
 
 

@@ -3,15 +3,15 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Sidebar from '../../../Shared/Sidebar/Sidebar';
 import Header from '../../../Shared/Header/Header';
-import DebitNote from '../../Purchases/DebitNote/DebitNote';
-import PurchaseOrder from '../../Purchases/PurchaseOrder/PurchaseOrder';
-import Voucher from '../../Purchases/Voucher/Voucher';
+import DebitNote from '../DebitNote/DebitNote';
+import PurchaseOrder from '../PurchaseOrder/PurchaseOrder';
+import Voucher from '../Voucher/Voucher';
 
 // Receivables sub-tabs
-import PuchaseAgeing from '../../Purchases/Payables/Ageing';
-import OverduePayables from '../../Purchases/Payables/OverduePayables';
-import PartyWisePayables from '../../Purchases/Payables/PartyWisePayables';
-import UpcomingPayables from '../../Purchases/Payables/UpcomingPayables';
+import PuchaseAgeing from '../Payables/Ageing';
+import OverduePayables from '../Payables/OverduePayables';
+import PartyWisePayables from '../Payables/PartyWisePayables';
+import UpcomingPayables from '../Payables/UpcomingPayables';
 import '../../Sales/Sales.css';
 
 const AddSalesForm = ({ user }) => {
