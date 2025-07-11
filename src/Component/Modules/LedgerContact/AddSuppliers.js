@@ -529,16 +529,21 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import FormLayout, { FormSection } from '../../Layout/FormLayout/FormLayout';
 import './AddCustomerForm.css';
 import axios from 'axios';
+import { useParams, useNavigate } from 'react-router-dom';
 
 
 const AddSupplierForm = ({ user }) => {
+
+  const { id } = useParams(); // Get the ID from URL if it exists
+  const [isEditing, setIsEditing] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sameAsShipping, setSameAsShipping] = useState(false);
   const [activeTab, setActiveTab] = useState('information');
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     group: "supplier",
     title: "",
@@ -584,6 +589,36 @@ const AddSupplierForm = ({ user }) => {
     billing_gstin: ""
   });
 
+    // Fetch supplier data if ID exists (edit mode)
+  useEffect(() => {
+    if (id) {
+      const fetchSupplier = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5000/accounts/${id}`);
+          setFormData(response.data);
+          setIsEditing(true);
+          
+          // Check if billing address is same as shipping address
+          const isSameAddress = 
+            response.data.billing_address_line1 === response.data.shipping_address_line1 &&
+            response.data.billing_address_line2 === response.data.shipping_address_line2 &&
+            response.data.billing_city === response.data.shipping_city &&
+            response.data.billing_pin_code === response.data.shipping_pin_code &&
+            response.data.billing_state === response.data.shipping_state &&
+            response.data.billing_country === response.data.shipping_country &&
+            response.data.billing_branch_name === response.data.shipping_branch_name &&
+            response.data.billing_gstin === response.data.shipping_gstin;
+            
+          setSameAsShipping(isSameAddress);
+        } catch (err) {
+          console.error('Failed to fetch supplier data', err);
+        }
+      };
+      
+      fetchSupplier();
+    }
+  }, [id]);
+
 
   const tabs = [
     { id: 'information', label: 'Information' },
@@ -620,10 +655,21 @@ const AddSupplierForm = ({ user }) => {
     }
 
     try {
-      await axios.post('http://localhost:5000/accounts', finalData);
-      alert('Supplier added successfully!');
+         let response;
+         if (isEditing) {
+           // PUT operation for updating existing supplier
+           response = await axios.put(`http://localhost:5000/accounts/${id}`, finalData);
+           alert('Supplier updated successfully!');
+         } else {
+           // POST operation for new supplier
+           response = await axios.post('http://localhost:5000/accounts', finalData);
+           alert('Supplier added successfully!');
+         }
+   
+          // Navigate to view supplier after successful operation
+         navigate('/view-suppliers');
 
-      // Reset form data
+      if (!isEditing) {
       setFormData({
         group: "supplier",
         title: "",
@@ -674,10 +720,10 @@ const AddSupplierForm = ({ user }) => {
 
       // Optionally navigate or reset tab
       setActiveTab("information");
-
+    }
     } catch (err) {
       console.error(err);
-      alert('Failed to add customer');
+      alert(`Failed to ${isEditing ? 'update' : 'add'} supplier`);
     }
   };
 
@@ -686,7 +732,7 @@ const AddSupplierForm = ({ user }) => {
   return (
     <FormLayout
       user={user}
-      title="Add Supplier"
+         title={isEditing ? "Edit Supplier" : "Add Supplier"}
       tabs={tabs}
       activeTab={activeTab}
       onTabClick={handleTabClick}

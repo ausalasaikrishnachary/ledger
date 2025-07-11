@@ -134,6 +134,7 @@ const ViewSuppliers = ({ user }) => {
     const formatted = res.data
       .filter((supplier) => supplier.group === "supplier") // ✅ Only include suppliers
       .map((supplier) => ({
+        id: supplier.id, // Preserve the original ID
         name: (
           <>
             <a href="#" className="customer-link">{supplier.name}</a>
@@ -172,7 +173,7 @@ const ViewSuppliers = ({ user }) => {
   };
 
   const handleEditSupplier = (supplier) => {
-    console.log('Editing supplier:', supplier);
+     navigate(`/add-supplier/${supplier.id}`);
   };
 
   const handleDeleteSupplier = (supplier) => {
@@ -187,7 +188,7 @@ const ViewSuppliers = ({ user }) => {
     console.log('Selected Range:', range);
   };
 
-  const columns = ['NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
+  const columns = ['ID', 'NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
 
   return (
     <div className="dashboard-container">

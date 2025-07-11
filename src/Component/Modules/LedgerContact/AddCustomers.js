@@ -529,16 +529,21 @@
 
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; 
 import FormLayout, { FormSection } from '../../Layout/FormLayout/FormLayout';
 import './AddCustomerForm.css';
-import axios from 'axios';
+import axios from 'axios'; 
+import { useParams, useNavigate } from 'react-router-dom';
 
 
 const AddCustomerForm = ({ user }) => {
+
+  const { id } = useParams(); // Get the ID from URL if it exists
+  const [isEditing, setIsEditing] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [sameAsShipping, setSameAsShipping] = useState(false);
   const [activeTab, setActiveTab] = useState('information');
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     group: "customer",
     title: "",
@@ -584,6 +589,36 @@ const AddCustomerForm = ({ user }) => {
     billing_gstin: ""
   });
 
+    // Fetch customer data if ID exists (edit mode)
+  useEffect(() => {
+    if (id) {
+      const fetchCustomer = async () => {
+        try {
+          const response = await axios.get(`http://localhost:5000/accounts/${id}`);
+          setFormData(response.data);
+          setIsEditing(true);
+          
+          // Check if billing address is same as shipping address
+          const isSameAddress = 
+            response.data.billing_address_line1 === response.data.shipping_address_line1 &&
+            response.data.billing_address_line2 === response.data.shipping_address_line2 &&
+            response.data.billing_city === response.data.shipping_city &&
+            response.data.billing_pin_code === response.data.shipping_pin_code &&
+            response.data.billing_state === response.data.shipping_state &&
+            response.data.billing_country === response.data.shipping_country &&
+            response.data.billing_branch_name === response.data.shipping_branch_name &&
+            response.data.billing_gstin === response.data.shipping_gstin;
+            
+          setSameAsShipping(isSameAddress);
+        } catch (err) {
+          console.error('Failed to fetch customer data', err);
+        }
+      };
+      
+      fetchCustomer();
+    }
+  }, [id]);
+
 
   const tabs = [
     { id: 'information', label: 'Information' },
@@ -602,7 +637,7 @@ const AddCustomerForm = ({ user }) => {
   };
 
 
-  const handleSubmit = async () => {
+   const handleSubmit = async () => {
     let finalData = { ...formData };
 
     if (sameAsShipping) {
@@ -620,64 +655,72 @@ const AddCustomerForm = ({ user }) => {
     }
 
     try {
-      await axios.post('http://localhost:5000/accounts', finalData);
-      alert('Customer added successfully!');
+      let response;
+      if (isEditing) {
+        // PUT operation for updating existing customer
+        response = await axios.put(`http://localhost:5000/accounts/${id}`, finalData);
+        alert('Customer updated successfully!');
+      } else {
+        // POST operation for new customer
+        response = await axios.post('http://localhost:5000/accounts', finalData);
+        alert('Customer added successfully!');
+      }
 
-      // Reset form data
-      setFormData({
-        group: "customer",
-        title: "",
-        entity_type: "",
-        name: "",
-        mobile_number: "",
-        email: "",
-        gstin: "",
-        gst_registered_name: "",
-        business_name: "",
-        additional_business_name: "",
-        display_name: "",
-        phone_number: "",
-        fax: "",
-        account_number: "",
-        account_name: "",
-        bank_name: "",
-        account_type: "",
-        branch_name: "",
-        ifsc_code: "",
-        pan: "",
-        tan: "",
-        tds_slab_rate: "",
-        currency: "",
-        terms_of_payment: "",
-        reverse_charge: "",
-        export_sez: "",
-        shipping_address_line1: "",
-        shipping_address_line2: "",
-        shipping_city: "",
-        shipping_pin_code: "",
-        shipping_state: "",
-        shipping_country: "",
-        shipping_branch_name: "",
-        shipping_gstin: "",
-        billing_address_line1: "",
-        billing_address_line2: "",
-        billing_city: "",
-        billing_pin_code: "",
-        billing_state: "",
-        billing_country: "",
-        billing_branch_name: "",
-        billing_gstin: ""
-      });
+       // Navigate to view customers after successful operation
+      navigate('/view-customers');
 
-      // Optionally reset checkbox
-      setSameAsShipping(false);
-
-      // Optionally navigate or reset tab
-      setActiveTab("information");
-
+      // Reset form if it was a new customer
+      if (!isEditing) {
+        setFormData({
+          group: "customer",
+          title: "",
+          entity_type: "",
+          name: "",
+          mobile_number: "",
+          email: "",
+          gstin: "",
+          gst_registered_name: "",
+          business_name: "",
+          additional_business_name: "",
+          display_name: "",
+          phone_number: "",
+          fax: "",
+          account_number: "",
+          account_name: "",
+          bank_name: "",
+          account_type: "",
+          branch_name: "",
+          ifsc_code: "",
+          pan: "",
+          tan: "",
+          tds_slab_rate: "",
+          currency: "",
+          terms_of_payment: "",
+          reverse_charge: "",
+          export_sez: "",
+          shipping_address_line1: "",
+          shipping_address_line2: "",
+          shipping_city: "",
+          shipping_pin_code: "",
+          shipping_state: "",
+          shipping_country: "",
+          shipping_branch_name: "",
+          shipping_gstin: "",
+          billing_address_line1: "",
+          billing_address_line2: "",
+          billing_city: "",
+          billing_pin_code: "",
+          billing_state: "",
+          billing_country: "",
+          billing_branch_name: "",
+          billing_gstin: ""
+        });
+        setSameAsShipping(false);
+        setActiveTab("information");
+      }
     } catch (err) {
       console.error(err);
-      alert('Failed to add customer');
+      alert(`Failed to ${isEditing ? 'update' : 'add'} customer`);
     }
   };
 
@@ -686,7 +729,7 @@ const AddCustomerForm = ({ user }) => {
   return (
     <FormLayout
       user={user}
-      title="Add Customer"
+       title={isEditing ? "Edit Customer" : "Add Customer"}
       tabs={tabs}
       activeTab={activeTab}
       onTabClick={handleTabClick}

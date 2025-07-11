@@ -132,9 +132,9 @@ const ViewCustomers = ({ user }) => {
   };
 
   const handleEditCustomer = (customer) => {
-    // Handle edit logic here
-    console.log('Editing customer:', customer);
-  };
+  // Navigate to edit route with customer ID
+  navigate(`/add-customer/${customer.id}`);
+};
 
   const handleDeleteCustomer = (customer) => {
     // Handle delete logic here
@@ -169,6 +169,7 @@ const ViewCustomers = ({ user }) => {
     const formattedCustomers = response.data
       .filter((cust) => cust.group === "customer") // ✅ Filter by group
       .map((cust) => ({
+        id: cust.id, // Preserve the original ID
         name: (
           <>
             <a href="#" className="customer-link">{cust.name}</a>
@@ -203,7 +204,7 @@ const ViewCustomers = ({ user }) => {
 
 
 
-  const columns = ['NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
+  const columns = ['ID','NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
 
   return (
     <div className="dashboard-container">
