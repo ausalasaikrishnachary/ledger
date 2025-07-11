@@ -129,7 +129,7 @@ const ViewSuppliers = ({ user }) => {
 
  const fetchSuppliers = async () => {
   try {
-    const res = await axios.get("http://localhost:5001/accounts");
+    const res = await axios.get("http://localhost:5000/accounts");
 
     const formatted = res.data
       .filter((supplier) => supplier.group === "supplier") // ✅ Only include suppliers

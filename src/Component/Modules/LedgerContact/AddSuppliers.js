@@ -620,7 +620,7 @@ const AddSupplierForm = ({ user }) => {
     }
 
     try {
-      await axios.post('http://localhost:5001/accounts', finalData);
+      await axios.post('http://localhost:5000/accounts', finalData);
       alert('Supplier added successfully!');
 
       // Reset form data

@@ -164,7 +164,7 @@ const ViewCustomers = ({ user }) => {
 
   const fetchCustomers = async () => {
   try {
-    const response = await axios.get("http://localhost:5001/accounts");
+    const response = await axios.get("http://localhost:5000/accounts");
 
     const formattedCustomers = response.data
       .filter((cust) => cust.group === "customer") // ✅ Filter by group

@@ -620,7 +620,7 @@ const AddCustomerForm = ({ user }) => {
     }
 
     try {
-      await axios.post('http://localhost:5001/accounts', finalData);
+      await axios.post('http://localhost:5000/accounts', finalData);
       alert('Customer added successfully!');
 
       // Reset form data
