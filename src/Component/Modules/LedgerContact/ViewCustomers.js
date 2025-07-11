@@ -114,6 +114,265 @@
 
 
 
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import Sidebar from '../../Shared/Sidebar/Sidebar';
+// import Header from '../../Shared/Header/Header';
+// import './ViewCustomers.css';
+// import TableLayout from '../../Layout/TableLayout/TableLayout';
+// import axios from 'axios';
+
+
+// const ViewCustomers = ({ user }) => {
+//   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+//   const navigate = useNavigate();
+// const [searchTerm, setSearchTerm] = useState('');
+//   const handleAddCustomer = () => {
+//     navigate('/add-customer');
+//   };
+
+//   const handleEditCustomer = (customer) => {
+//     // Handle edit logic here
+//     console.log('Editing customer:', customer);
+//   };
+
+//   const handleDeleteCustomer = (customer) => {
+//     // Handle delete logic here
+//     console.log('Deleting customer:', customer);
+//   };
+
+//  const handleViewCustomer = (customer) => {
+//   navigate('/customer-details', { state: { customer } });
+// };
+
+//   const handleDownloadReport = () => {
+//     // Handle download logic here
+//     console.log('Downloading report');
+//   };
+
+//   const handleDateRangeChange = (range) => {
+//     // Handle date range change logic here
+//     console.log('Selected Range:', range);
+//   };
+
+//   const [customers, setCustomers] = useState([]);
+
+//   useEffect(() => {
+//     fetchCustomers();
+//   }, []);
+
+// //   const fetchCustomers = async () => {
+// //   try {
+// //     const response = await axios.get("http://localhost:5000/accounts");
+
+// //     const formattedCustomers = response.data
+// //       .filter((cust) => cust.group === "customer") // ✅ Filter by group
+// //       .map((cust) => ({
+// //         name: (
+// //           <>
+// //             <a href="#" className="customer-link">{cust.name}</a>
+// //             <div>{cust.business_name}</div>
+// //           </>
+// //         ),
+// //         contact: (
+// //           <>
+// //             <div>{cust.mobile_number}</div>
+// //             <div>{cust.email}</div>
+// //           </>
+// //         ),
+// //         taxInfo: (
+// //           <>
+// //             <div>PAN: <a href="#" className="update-pan-link">Update PAN</a></div>
+// //             <div>GSTIN: {cust.gstin}</div>
+// //           </>
+// //         ),
+// //         created: (
+// //           <>
+// //             <div>{cust.created_by || 'Admin'}</div>
+// //             <div>{cust.created_at ? new Date(cust.created_at).toISOString().split('T')[0] : 'N/A'}</div>
+// //           </>
+// //         )
+// //       }));
+
+// //     setCustomers(formattedCustomers);
+// //   } catch (error) {
+// //     console.error("Error fetching customers:", error);
+// //   }
+// // };
+
+// const fetchCustomers = async () => {
+//   try {
+//     const response = await axios.get("http://localhost:5000/accounts");
+
+//     const customers = response.data
+//       .filter((cust) => cust.group === "customer");
+
+//     setCustomers(customers); // <-- store raw customer data
+//   } catch (error) {
+//     console.error("Error fetching customers:", error);
+//   }
+// };
+//  const filteredCustomers = customers.filter(customer => 
+//     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//     (customer.business_name && customer.business_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+//     (customer.mobile_number && customer.mobile_number.includes(searchTerm)) ||
+//     (customer.email && customer.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+//     (customer.gstin && customer.gstin.toLowerCase().includes(searchTerm.toLowerCase()))
+//   );
+
+//   const columns = ['NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
+
+//   return (
+//     <div className="dashboard-container">
+//       <Header
+//         user={user}
+//         toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+//       />
+//       <div className="content-wrapper">
+//         <div className={`pcoded-navbar ${sidebarCollapsed ? 'navbar-collapsed' : ''}`}>
+//           <Sidebar
+//             user={user}
+//             collapsed={sidebarCollapsed}
+//           />
+//         </div>
+//         <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
+//           <TableLayout
+//             title="View Customers"
+//             addButtonText="Add Customer"
+//             onAddClick={handleAddCustomer}
+//             columns={columns}
+//             data={customers}
+//             onEdit={handleEditCustomer}
+//             onDelete={handleDeleteCustomer}
+//             onView={handleViewCustomer}
+//             onDownload={handleDownloadReport}
+//             onDateRangeChange={handleDateRangeChange}
+//                     searchTerm={searchTerm}
+//             onSearchChange={setSearchTerm}
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ViewCustomers;
+
+
+
+
+
+
+
+
+// import React, { useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import Sidebar from '../../Shared/Sidebar/Sidebar';
+// import Header from '../../Shared/Header/Header';
+// import './ViewCustomers.css';
+// import TableLayout from '../../Layout/TableLayout/TableLayout';
+// import axios from 'axios';
+
+// const ViewCustomers = ({ user }) => {
+//   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+//   const [customers, setCustomers] = useState([]);
+//   const [searchTerm, setSearchTerm] = useState('');
+//   const navigate = useNavigate();
+
+//   useEffect(() => {
+//     fetchCustomers();
+//   }, []);
+
+//   const fetchCustomers = async () => {
+//     try {
+//       const response = await axios.get("http://localhost:5000/accounts");
+//       const customers = response.data.filter((cust) => cust.group === "customer");
+//       setCustomers(customers);
+//     } catch (error) {
+//       console.error("Error fetching customers:", error);
+//     }
+//   };
+
+//   const handleAddCustomer = () => {
+//     navigate('/add-customer');
+//   };
+
+//   const handleEditCustomer = (customer) => {
+//     console.log('Editing customer:', customer);
+//   };
+
+//   const handleDeleteCustomer = async (customer) => {
+//     try {
+//       await axios.delete(`http://localhost:5000/accounts/${customer.id}`);
+//       fetchCustomers(); // Refresh the list after deletion
+//     } catch (error) {
+//       console.error('Error deleting customer:', error);
+//     }
+//   };
+
+//   const handleViewCustomer = (customer) => {
+//     navigate('/customer-details', { state: { customer } });
+//   };
+
+//   const handleDownloadReport = () => {
+//     console.log('Downloading report');
+//   };
+
+//   const handleDateRangeChange = (range) => {
+//     console.log('Selected Range:', range);
+//   };
+
+//   const filteredCustomers = customers.filter(customer => 
+//     customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+//     (customer.business_name && customer.business_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+//     (customer.mobile_number && customer.mobile_number.includes(searchTerm)) ||
+//     (customer.email && customer.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+//     (customer.gstin && customer.gstin.toLowerCase().includes(searchTerm.toLowerCase()))
+//   );
+
+//   const columns = ['NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
+
+//   return (
+//     <div className="dashboard-container">
+//       <Header
+//         user={user}
+//         toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
+//       />
+//       <div className="content-wrapper">
+//         <div className={`pcoded-navbar ${sidebarCollapsed ? 'navbar-collapsed' : ''}`}>
+//           <Sidebar
+//             user={user}
+//             collapsed={sidebarCollapsed}
+//           />
+//         </div>
+//         <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
+//           <TableLayout
+//             title="View Customers"
+//             addButtonText="Add Customer"
+//             onAddClick={handleAddCustomer}
+//             columns={columns}
+//             data={filteredCustomers}
+//             onEdit={handleEditCustomer}
+//             onDelete={handleDeleteCustomer}
+//             onView={handleViewCustomer}
+//             onDownload={handleDownloadReport}
+//             onDateRangeChange={handleDateRangeChange}
+//             searchTerm={searchTerm}
+//             onSearchChange={setSearchTerm}
+//           />
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ViewCustomers;
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../Shared/Sidebar/Sidebar';
@@ -122,86 +381,77 @@ import './ViewCustomers.css';
 import TableLayout from '../../Layout/TableLayout/TableLayout';
 import axios from 'axios';
 
-
 const ViewCustomers = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const navigate = useNavigate();
-
-  const handleAddCustomer = () => {
-    navigate('/add-customer');
-  };
-
-  const handleEditCustomer = (customer) => {
-    // Handle edit logic here
-    console.log('Editing customer:', customer);
-  };
-
-  const handleDeleteCustomer = (customer) => {
-    // Handle delete logic here
-    console.log('Deleting customer:', customer);
-  };
-
-  const handleViewCustomer = (customer) => {
-    // Handle view logic here
-    console.log('Viewing customer:', customer);
-  };
-
-  const handleDownloadReport = () => {
-    // Handle download logic here
-    console.log('Downloading report');
-  };
-
-  const handleDateRangeChange = (range) => {
-    // Handle date range change logic here
-    console.log('Selected Range:', range);
-  };
-
   const [customers, setCustomers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(1); // Number of items per page
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchCustomers();
   }, []);
 
   const fetchCustomers = async () => {
-  try {
-    const response = await axios.get("http://localhost:5000/accounts");
+    try {
+      const response = await axios.get("http://localhost:5000/accounts");
+      const customers = response.data.filter((cust) => cust.group === "customer");
+      setCustomers(customers);
+    } catch (error) {
+      console.error("Error fetching customers:", error);
+    }
+  };
 
-    const formattedCustomers = response.data
-      .filter((cust) => cust.group === "customer") // ✅ Filter by group
-      .map((cust) => ({
-        name: (
-          <>
-            <a href="#" className="customer-link">{cust.name}</a>
-            <div>{cust.business_name}</div>
-          </>
-        ),
-        contact: (
-          <>
-            <div>{cust.mobile_number}</div>
-            <div>{cust.email}</div>
-          </>
-        ),
-        taxInfo: (
-          <>
-            <div>PAN: <a href="#" className="update-pan-link">Update PAN</a></div>
-            <div>GSTIN: {cust.gstin}</div>
-          </>
-        ),
-        created: (
-          <>
-            <div>{cust.created_by || 'Admin'}</div>
-            <div>{cust.created_at ? new Date(cust.created_at).toISOString().split('T')[0] : 'N/A'}</div>
-          </>
-        )
-      }));
+  // Filter customers based on search term
+  const filteredCustomers = customers.filter(customer => 
+    customer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (customer.business_name && customer.business_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (customer.mobile_number && customer.mobile_number.includes(searchTerm)) ||
+    (customer.email && customer.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    (customer.gstin && customer.gstin.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
 
-    setCustomers(formattedCustomers);
-  } catch (error) {
-    console.error("Error fetching customers:", error);
-  }
-};
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredCustomers.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredCustomers.length / itemsPerPage);
 
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  const handleAddCustomer = () => {
+    navigate('/add-customer');
+  };
+
+  const handleEditCustomer = (customer) => {
+    console.log('Editing customer:', customer);
+  };
+
+  const handleDeleteCustomer = async (customer) => {
+    try {
+      await axios.delete(`http://localhost:5000/accounts/${customer.id}`);
+      fetchCustomers(); // Refresh the list after deletion
+      // Reset to first page if we're on a page that might now be empty
+      if (currentItems.length === 1 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
+    } catch (error) {
+      console.error('Error deleting customer:', error);
+    }
+  };
+
+  const handleViewCustomer = (customer) => {
+    navigate('/customer-details', { state: { customer } });
+  };
+
+  const handleDownloadReport = () => {
+    console.log('Downloading report');
+  };
+
+  const handleDateRangeChange = (range) => {
+    console.log('Selected Range:', range);
+  };
 
   const columns = ['NAME', 'CONTACT INFO', 'TAX INFORMATION', 'CREATED BY', 'ACTION'];
 
@@ -224,12 +474,20 @@ const ViewCustomers = ({ user }) => {
             addButtonText="Add Customer"
             onAddClick={handleAddCustomer}
             columns={columns}
-            data={customers}
+            data={currentItems}
             onEdit={handleEditCustomer}
             onDelete={handleDeleteCustomer}
             onView={handleViewCustomer}
             onDownload={handleDownloadReport}
             onDateRangeChange={handleDateRangeChange}
+            searchTerm={searchTerm}
+            onSearchChange={(term) => {
+              setSearchTerm(term);
+              setCurrentPage(1); // Reset to first page when searching
+            }}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={paginate}
           />
         </div>
       </div>

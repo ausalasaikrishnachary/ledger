@@ -39,8 +39,9 @@ import PuchaseAgeing from './Component/Modules/Purchases/Payables/Ageing';
 import OverduePayables from './Component/Modules/Purchases/Payables/OverduePayables';
 import PartyWisePayables from './Component/Modules/Purchases/Payables/PartyWisePayables';
 import UpcomingPayables from './Component/Modules/Purchases/Payables/UpcomingPayables';
+import ViewCustomerDetails from './Component/Modules/LedgerContact/ViewCustomerDetails';
 
-
+import ViewSupplierDetails from './Component/Modules/LedgerContact/ViewSupplierDetails';
 
 
 function App() {
@@ -53,6 +54,8 @@ function App() {
           <Route path="/view-customers" element={<ViewCustomers />} />
           <Route path="/view-suppliers" element={<ViewSuppliers />} />
           <Route path="/add-customer" element={<AddCustomer />} />
+          <Route path="/customer-details" element={<ViewCustomerDetails />} />
+          <Route path="/supplier-details" element={<ViewSupplierDetails />} />
           <Route path="/add-supplier" element={<AddSupplier />} />
           <Route path="/quotations" element={<Quotations />} />
           <Route path="/receipts" element={<Receipts />} />
