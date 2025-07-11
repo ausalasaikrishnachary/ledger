@@ -1,0 +1,11 @@
+/* src/Pages/Customers/ViewCustomerDetails.css */
+.card {
+  border-radius: 12px;
+  border: 1px solid #ccc;
+}
+.card-title {
+  font-weight: 600;
+}
+td {
+  font-size: 15px;
+}
