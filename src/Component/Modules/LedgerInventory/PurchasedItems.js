@@ -174,9 +174,9 @@ const PurchasedItems = ({ user }) => {
                       <tr key={index} className="align-middle">
                         <td>
                           <FaShoppingBag className="me-2 text-info" />
-                          <a href="/" className="text-primary text-decoration-none">
-                            {item.name}
-                          </a>
+                           <a href={`/product-details/${item.name}`} className="text-primary text-decoration-none">
+                              {item.name}
+                            </a>
                           <br />
                           <span className="text-muted">RS. {item.price}</span>
                         </td>

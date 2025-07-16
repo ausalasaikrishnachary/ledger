@@ -24,7 +24,7 @@ import PurchasedItems from './Component/Modules/LedgerInventory/PurchasedItems';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import SalesItems from './Component/Modules/LedgerInventory/SalesItems';
 
-
+import ProductDetails from './Component/Modules/LedgerInventory/SalesItemsProductDetails';
 
 // Purchase
 
@@ -72,6 +72,7 @@ function App() {
           <Route path="/upcoming" element={<UpcomingReveivables />} />
            <Route path="/purchased-items" element={<PurchasedItems />} />
             <Route path="/sales-items" element={<SalesItems />} />
+            <Route path="/product-details/:productName" element={<ProductDetails />} />
 
           // Purchase
 
