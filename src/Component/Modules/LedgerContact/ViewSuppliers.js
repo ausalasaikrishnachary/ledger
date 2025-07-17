@@ -362,6 +362,7 @@ import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
 import TableLayout from '../../Layout/TableLayout/TableLayout';
 import axios from 'axios';
+import { baseurl } from '../../BaseURL/BaseURL';
 
 const ViewSuppliers = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -377,7 +378,7 @@ const ViewSuppliers = ({ user }) => {
 
   const fetchSuppliers = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/accounts");
+      const res = await axios.get(`${baseurl}accounts`);
       const filteredSuppliers = res.data.filter(
         (supplier) => supplier.group === "supplier"
       );
@@ -414,7 +415,7 @@ const ViewSuppliers = ({ user }) => {
 
   const handleDeleteSupplier = async (supplier) => {
     try {
-      await axios.delete(`http://localhost:5000/accounts/${supplier.id}`);
+      await axios.delete(`${baseurl}accounts/${supplier.id}`);
       fetchSuppliers(); // Refresh the list after deletion
       // Reset to first page if we're on a page that might now be empty
       if (currentItems.length === 1 && currentPage > 1) {

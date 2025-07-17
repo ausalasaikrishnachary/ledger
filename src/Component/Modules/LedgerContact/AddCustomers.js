@@ -534,6 +534,7 @@ import FormLayout, { FormSection } from '../../Layout/FormLayout/FormLayout';
 import './AddCustomerForm.css';
 import axios from 'axios'; 
 import { useParams, useNavigate } from 'react-router-dom';
+import { baseurl } from './../../BaseURL/BaseURL';
 
 const AddCustomerForm = ({ user }) => {
   const { id } = useParams();
@@ -593,7 +594,7 @@ const AddCustomerForm = ({ user }) => {
     if (id) {
       const fetchCustomer = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/accounts/${id}`);
+          const response = await axios.get(`${baseurl}/accounts/${id}`);
           setFormData(response.data);
           setIsEditing(true);
           
@@ -713,10 +714,10 @@ const AddCustomerForm = ({ user }) => {
 
     try {
       if (isEditing) {
-        await axios.put(`http://localhost:5000/accounts/${id}`, finalData);
+        await axios.put(`${baseurl}accounts/${id}`, finalData);
         alert('Customer updated successfully!');
       } else {
-        await axios.post('http://localhost:5000/accounts', finalData);
+        await axios.post(`${baseurl}accounts`, finalData);
         alert('Customer added successfully!');
       }
       navigate('/view-customers');

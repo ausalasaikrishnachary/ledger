@@ -380,6 +380,7 @@ import Header from '../../Shared/Header/Header';
 import './ViewCustomers.css';
 import TableLayout from '../../Layout/TableLayout/TableLayout';
 import axios from 'axios';
+import { baseurl } from '../../BaseURL/BaseURL';
 
 const ViewCustomers = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -395,7 +396,7 @@ const ViewCustomers = ({ user }) => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/accounts");
+      const response = await axios.get(`${baseurl}accounts`);
       const customers = response.data.filter((cust) => cust.group === "customer");
       setCustomers(customers);
     } catch (error) {
@@ -430,7 +431,7 @@ const ViewCustomers = ({ user }) => {
 
   const handleDeleteCustomer = async (customer) => {
     try {
-      await axios.delete(`http://localhost:5000/accounts/${customer.id}`);
+      await axios.delete(`${baseurl}accounts/${customer.id}`);
       fetchCustomers(); // Refresh the list after deletion
       // Reset to first page if we're on a page that might now be empty
       if (currentItems.length === 1 && currentPage > 1) {
