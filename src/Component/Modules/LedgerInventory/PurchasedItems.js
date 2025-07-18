@@ -108,7 +108,9 @@ const PurchasedItems = ({ user }) => {
                   </div>
                 </div>
 
-                <AddProductModal show={showProductModal} onClose={() => setShowProductModal(false)} />
+                <AddProductModal show={showProductModal} onClose={() => setShowProductModal(false)}
+                groupType="Purchaseditems"
+                 />
                 <AddServiceModal show={showServiceModal} onClose={() => setShowServiceModal(false)} />
 
                 <div className="d-flex gap-2">
@@ -117,41 +119,6 @@ const PurchasedItems = ({ user }) => {
                 </div>
               </div>
 
-      <AddProductModal 
-      show={showProductModal}
-      onClose={() => setShowProductModal(false)} 
-      groupType="Purchaseditems"
-      />
-
-      <AddServiceModal show={showServiceModal} onClose={() => setShowServiceModal(false)} />
-
-              <div className="d-flex gap-2">
-                <button className="btn btn-warning">Bulk Upload</button>
-                <button className="btn btn-info">Export</button>
-              </div>
-            </div>
-
-            <div className="card p-3">
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <input
-                  type="text"
-                  className="form-control datepicker"
-                  placeholder="📅 Select Date Range"
-                  value={dateRange}
-                  onChange={(e) => setDateRange(e.target.value)}
-                />
-                <button className="btn btn-info">Download Report</button>
-              </div>
-
-              <div className="d-flex justify-content-between mb-2">
-                <div>
-                  Show{' '}
-                  <select className="form-select d-inline w-auto">
-                    <option>10</option>
-                    <option>25</option>
-                    <option>50</option>
-                  </select>{' '}
-                  entries
               <div className="card p-3">
                 <div className="d-flex align-items-center gap-2 mb-3">
                   <input
@@ -285,8 +252,6 @@ const PurchasedItems = ({ user }) => {
         onClose={() => setShowViewModal(false)}
         stockData={stockData}
       />
-      </div>
-      </div>
     </>
   );
 };

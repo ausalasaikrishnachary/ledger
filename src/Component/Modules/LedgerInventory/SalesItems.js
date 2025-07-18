@@ -91,7 +91,6 @@ const SalesItems = ({ user }) => {
                 groupType="Salescatalog"
                  />
 
-                <AddProductModal show={showProductModal} onClose={() => setShowProductModal(false)} />
                 <AddServiceModal show={showServiceModal} onClose={() => setShowServiceModal(false)} />
                 <div className="d-flex gap-2">
                   <button className="btn btn-warning">Bulk Upload</button>
