@@ -117,7 +117,11 @@ const SalesItems = ({ user }) => {
                   </div>
                 </div>
 
-                <AddProductModal show={showProductModal} onClose={() => setShowProductModal(false)} />
+                <AddProductModal
+                 show={showProductModal} 
+                onClose={() => setShowProductModal(false)}
+                groupType="Salescatalog"
+                 />
 
                 <AddServiceModal show={showServiceModal} onClose={() => setShowServiceModal(false)} />
 

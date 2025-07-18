@@ -1,17 +1,30 @@
 // AddCategoryModal.js
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import axios from "axios";
 
 const AddCategoryModal = ({ show, onClose, onSave }) => {
   const [categoryName, setCategoryName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = () => {
-    if (categoryName.trim() !== "") {
-      onSave(categoryName);
-      setCategoryName("");
-      onClose();
-    }
-  };
+ // AddCategoryModal.js
+const handleSave = async () => {
+  if (categoryName.trim() === "") return;
+  
+  setIsSaving(true);
+  try {
+    const response = await axios.post("http://localhost:5000/categories", {
+      category_name: categoryName
+    });
+    onSave(response.data); // Pass the full saved category object
+    setCategoryName("");
+    onClose();
+  } catch (error) {
+    console.error("Error saving category:", error);
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   return (
     <Modal show={show} onHide={onClose} centered backdrop="static">
@@ -28,12 +41,11 @@ const AddCategoryModal = ({ show, onClose, onSave }) => {
             onChange={(e) => setCategoryName(e.target.value)}
           />
         </Form.Group>
-        <Button variant="info" onClick={handleSave}>
-          Save
+        <Button variant="info" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Save'}
         </Button>
       </Modal.Body>
     </Modal>
   );
 };
-
 export default AddCategoryModal;

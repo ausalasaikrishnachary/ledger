@@ -117,7 +117,11 @@ const PurchasedItems = ({ user }) => {
                 </div>
               </div>
 
-      <AddProductModal show={showProductModal} onClose={() => setShowProductModal(false)} />
+      <AddProductModal 
+      show={showProductModal}
+      onClose={() => setShowProductModal(false)} 
+      groupType="Purchaseditems"
+      />
 
       <AddServiceModal show={showServiceModal} onClose={() => setShowServiceModal(false)} />
 

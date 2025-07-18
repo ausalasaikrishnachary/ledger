@@ -1,17 +1,30 @@
 // AddCompanyModal.js
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
+import axios from "axios";
 
 const AddCompanyModal = ({ show, onClose, onSave }) => {
   const [companyName, setCompanyName] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSave = () => {
-    if (companyName.trim() !== "") {
-      onSave(companyName);
-      setCompanyName("");
-      onClose();
-    }
-  };
+ // AddCompanyModal.js
+const handleSave = async () => {
+  if (companyName.trim() === "") return;
+  
+  setIsSaving(true);
+  try {
+    const response = await axios.post("http://localhost:5000/companies", {
+      company_name: companyName
+    });
+    onSave(response.data); // Pass the full saved company object
+    setCompanyName("");
+    onClose();
+  } catch (error) {
+    console.error("Error saving company:", error);
+  } finally {
+    setIsSaving(false);
+  }
+};
 
   return (
     <Modal show={show} onHide={onClose} centered backdrop="static">
@@ -28,12 +41,11 @@ const AddCompanyModal = ({ show, onClose, onSave }) => {
             onChange={(e) => setCompanyName(e.target.value)}
           />
         </Form.Group>
-        <Button variant="info" onClick={handleSave}>
-          Save
+        <Button variant="info" onClick={handleSave} disabled={isSaving}>
+          {isSaving ? 'Saving...' : 'Save'}
         </Button>
       </Modal.Body>
     </Modal>
   );
 };
-
 export default AddCompanyModal;
