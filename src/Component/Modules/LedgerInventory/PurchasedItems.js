@@ -285,6 +285,8 @@ const PurchasedItems = ({ user }) => {
         onClose={() => setShowViewModal(false)}
         stockData={stockData}
       />
+      </div>
+      </div>
     </>
   );
 };
