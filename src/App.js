@@ -1,7 +1,7 @@
 // src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Customers from './Component/Modules/Contacts/Customers';
+// import Customers from './Component/Modules/Contacts/Customers';
 import Dashboard from './Component/Dashboard/Dashboard';
 import ViewCustomers from './Component/Modules/LedgerContact/ViewCustomers';
 import ViewSuppliers from './Component/Modules/LedgerContact/ViewSuppliers';
@@ -50,7 +50,7 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Dashboard />} />
-          <Route path="/customer" element={<Customers />} />
+          {/* <Route path="/customer" element={<Customers />} /> */}
           <Route path="/view-customers" element={<ViewCustomers />} />
           <Route path="/view-suppliers" element={<ViewSuppliers />} />
           <Route path="/add-customer" element={<AddCustomer />} />

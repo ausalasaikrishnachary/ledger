@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaEdit, FaTrash, FaPlusCircle, FaMinusCircle, FaEye, FaShoppingBag } from 'react-icons/fa';
 import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
 import './PurchasedItems.css';
-import AddProductModal from './AddProductModal'; // Import the modal component
+import AddProductModal from './AddProductModal';
 import AddServiceModal from './AddServiceModal';
 import AddStockModal from './AddStockModal';
 import DeductStockModal from './DeductStockModal';
 import StockDetailsModal from './StockDetailsModal';
-
+import { baseurl } from './../../BaseURL/BaseURL';
+import axios from 'axios';
 
 const SalesItems = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -16,14 +17,10 @@ const SalesItems = ({ user }) => {
   const [search, setSearch] = useState('');
   const [showProductModal, setShowProductModal] = useState(false);
   const [showServiceModal, setShowServiceModal] = useState(false);
-
   const [showStockModal, setShowStockModal] = useState(false);
-  const [stock, setStock] = useState(10); // initial value
-
   const [showDeductModal, setShowDeductModal] = useState(false);
-  // const [stock, setStock] = useState(10);
-
   const [showViewModal, setShowViewModal] = useState(false);
+  const [stock, setStock] = useState(10);
   const [stockData, setStockData] = useState({
     productName: "iPhone 16",
     openingStock: 10,
@@ -31,25 +28,26 @@ const SalesItems = ({ user }) => {
     stockOut: 0,
     availableStock: 15
   });
+  const [items, setItems] = useState([]);
 
-  const items = [
-    {
-      name: 'fan',
-      price: 500,
-      description: 'hello this is a fan',
-      gst: 18,
-      updatedBy: 'iiiQbets',
-      updatedOn: '2025-07-08',
-    },
-    {
-      name: 'stove',
-      price: 500,
-      description: 'hello this is a stove',
-      gst: 18,
-      updatedBy: 'iiiQbets',
-      updatedOn: '2025-07-08',
-    },
-  ];
+  // Fetch product data from API
+  useEffect(() => {
+    axios.get(`${baseurl}/products`)
+      .then(response => {
+        const formatted = response.data.map(product => ({
+          name: product.goods_name,
+          price: product.price,
+          description: product.description,
+          gst: product.gst_rate,
+          updatedBy: 'System',
+          updatedOn: new Date(product.updated_at).toLocaleDateString()
+        }));
+        setItems(formatted);
+      })
+      .catch(error => {
+        console.error('Error fetching product data:', error);
+      });
+  }, []);
 
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(search.toLowerCase())
@@ -58,29 +56,17 @@ const SalesItems = ({ user }) => {
   return (
     <>
       <div className="dashboard-container">
-        <Header
-          user={user}
-          toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
-        />
+        <Header user={user} toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} />
         <div className="content-wrapper">
           <div className={`pcoded-navbar ${sidebarCollapsed ? 'navbar-collapsed' : ''}`}>
-            <Sidebar
-              user={user}
-              collapsed={sidebarCollapsed}
-            />
+            <Sidebar user={user} collapsed={sidebarCollapsed} />
           </div>
           <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
             <div className="container-fluid mt-3 purchased-items-wrapper">
               <div className="d-flex justify-content-between align-items-center mb-3">
                 <div className="d-flex gap-2">
-                  {/* Purchased Items Dropdown */}
                   <div className="dropdown">
-                    <button
-                      className="btn btn-info dropdown-toggle d-flex align-items-center"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
+                    <button className="btn btn-info dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i className="bi bi-list me-2"></i> Sales Catalog
                     </button>
                     <ul className="dropdown-menu">
@@ -88,39 +74,18 @@ const SalesItems = ({ user }) => {
                       <li><a className="dropdown-item" href="/purchased-items">Purchased Items</a></li>
                     </ul>
                   </div>
-
-                  {/* ADD Dropdown */}
                   <div className="dropdown">
-                    <button
-                      className="btn btn-success dropdown-toggle d-flex align-items-center"
-                      type="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
+                    <button className="btn btn-success dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                       <i className="bi bi-plus-circle me-2"></i> ADD
                     </button>
                     <ul className="dropdown-menu">
-                      <li>
-                        <button
-                          className="dropdown-item"
-                          onClick={() => setShowProductModal(true)}
-                        >
-                          Products
-                        </button>
-                      </li>
-                      <li>
-                        <button className="dropdown-item" onClick={() => setShowServiceModal(true)}>
-                          Services
-                        </button>
-                      </li>
+                      <li><button className="dropdown-item" onClick={() => setShowProductModal(true)}>Products</button></li>
+                      <li><button className="dropdown-item" onClick={() => setShowServiceModal(true)}>Services</button></li>
                     </ul>
                   </div>
                 </div>
-
                 <AddProductModal show={showProductModal} onClose={() => setShowProductModal(false)} />
-
                 <AddServiceModal show={showServiceModal} onClose={() => setShowServiceModal(false)} />
-
                 <div className="d-flex gap-2">
                   <button className="btn btn-warning">Bulk Upload</button>
                   <button className="btn btn-info">Export</button>
@@ -222,15 +187,9 @@ const SalesItems = ({ user }) => {
                   <div>
                     <nav>
                       <ul className="pagination pagination-sm mb-0">
-                        <li className="page-item disabled">
-                          <span className="page-link">Previous</span>
-                        </li>
-                        <li className="page-item active">
-                          <span className="page-link">1</span>
-                        </li>
-                        <li className="page-item disabled">
-                          <span className="page-link">Next</span>
-                        </li>
+                        <li className="page-item disabled"><span className="page-link">Previous</span></li>
+                        <li className="page-item active"><span className="page-link">1</span></li>
+                        <li className="page-item disabled"><span className="page-link">Next</span></li>
                       </ul>
                     </nav>
                   </div>
@@ -238,8 +197,8 @@ const SalesItems = ({ user }) => {
               </div>
 
               <div className="summary-box card mt-3 p-3">
-                <p>Total Active Catalog: 2</p>
-                <p>Total Active Products: 2</p>
+                <p>Total Active Catalog: {items.length}</p>
+                <p>Total Active Products: {items.length}</p>
                 <p>Total Active Services: 0</p>
               </div>
             </div>
@@ -266,12 +225,12 @@ const SalesItems = ({ user }) => {
         onClose={() => setShowViewModal(false)}
         stockData={stockData}
       />
-
     </>
   );
 };
 
 export default SalesItems;
+
 
 
 
