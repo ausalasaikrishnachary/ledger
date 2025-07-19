@@ -1,15 +1,18 @@
-// AddStockModal.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 
 const AddStockModal = ({ show, onClose, currentStock = 0, onSave }) => {
   const [quantity, setQuantity] = useState("");
   const [remark, setRemark] = useState("");
-  const today = new Date().toLocaleDateString("en-GB"); // format: dd-mm-yyyy
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
 
   const handleSave = () => {
-    if (quantity && !isNaN(quantity)) {
-      onSave({ quantity: parseInt(quantity), remark });
+    if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
+      onSave({ 
+        quantity: parseInt(quantity), 
+        remark,
+        date
+      });
       setQuantity("");
       setRemark("");
       onClose();
@@ -29,13 +32,15 @@ const AddStockModal = ({ show, onClose, currentStock = 0, onSave }) => {
           </Col>
           <Col>
             <strong>Date</strong>
-            <div>{today}</div>
+            <div>{date}</div>
           </Col>
         </Row>
 
         <Form.Group className="mb-3">
-          <Form.Label>Enter Quantity to Add</Form.Label>
+          <Form.Label>Quantity to Add *</Form.Label>
           <Form.Control
+            type="number"
+            min="1"
             placeholder="Enter Quantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
@@ -43,9 +48,11 @@ const AddStockModal = ({ show, onClose, currentStock = 0, onSave }) => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Enter Remark (Optional)</Form.Label>
+          <Form.Label>Remark (Optional)</Form.Label>
           <Form.Control
-            placeholder="Remark"
+            as="textarea"
+            rows={2}
+            placeholder="Reason for adding stock"
             value={remark}
             onChange={(e) => setRemark(e.target.value)}
           />
@@ -53,10 +60,10 @@ const AddStockModal = ({ show, onClose, currentStock = 0, onSave }) => {
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
-          Close
+          Cancel
         </Button>
-        <Button variant="dark" onClick={handleSave}>
-          Save
+        <Button variant="primary" onClick={handleSave}>
+          Confirm Add
         </Button>
       </Modal.Footer>
     </Modal>

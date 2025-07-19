@@ -88,6 +88,7 @@ const AddProductModal = ({ show, onClose, groupType }) => {
     console.log("✅ Product added successfully!");
     console.log("Response:", response.data);
     onClose();
+    alert("submitted sucessfully");
   } catch (error) {
     console.error("❌ Failed to add product.");
 
@@ -341,15 +342,6 @@ const AddProductModal = ({ show, onClose, groupType }) => {
           <Button variant="primary" onClick={handleSubmit}>Submit</Button>
         </Modal.Footer>
       </Modal>
-
-      {/* <AddCompanyModal
-        show={showCompanyModal}
-        onClose={() => setShowCompanyModal(false)}
-        onSave={(newCompany) => {
-          setCompanyOptions([...companyOptions, newCompany]);
-          setFormData(prev => ({...prev, company_name: newCompany}));
-        }}
-      /> */}
        <AddCompanyModal
         show={showCompanyModal}
         onClose={() => setShowCompanyModal(false)}
@@ -360,15 +352,6 @@ const AddProductModal = ({ show, onClose, groupType }) => {
           setFormData(prev => ({...prev, company_id: newCompany.id}));
         }}
       />
-
-      {/* <AddCategoryModal
-        show={showCategoryModal}
-        onClose={() => setShowCategoryModal(false)}
-        onSave={(newCategory) => {
-          setCategoryOptions([...categoryOptions, newCategory]);
-          setFormData(prev => ({...prev, category: newCategory}));
-        }}
-      /> */}
       <AddCategoryModal
         show={showCategoryModal}
         onClose={() => setShowCategoryModal(false)}
