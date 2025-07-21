@@ -10,6 +10,7 @@ import DeductStockModal from './DeductStockModal';
 import StockDetailsModal from './StockDetailsModal';
 import { baseurl } from './../../BaseURL/BaseURL';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const SalesItems = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -23,7 +24,7 @@ const SalesItems = ({ user }) => {
   const [stock, setStock] = useState(10);
   const [stockData, setStockData] = useState();
   const [items, setItems] = useState([]);
-    const [selectedProductId, setSelectedProductId] = useState(null);
+  const [selectedProductId, setSelectedProductId] = useState(null);
   const [currentStockData, setCurrentStockData] = useState({
     opening_stock: 0,
     stock_in: 0,
@@ -31,67 +32,67 @@ const SalesItems = ({ user }) => {
     balance_stock: 0
   });
 
-const handleAddStock = async ({ quantity, remark }) => {
-  try {
-    const response = await axios.post(`${baseurl}/stock/${selectedProductId}`, {
-      stock_in: quantity,
-      stock_out: 0,
-      date: new Date().toISOString().split('T')[0],
-      remark
-    });
-    
+  const handleAddStock = async ({ quantity, remark }) => {
+    try {
+      const response = await axios.post(`${baseurl}/stock/${selectedProductId}`, {
+        stock_in: quantity,
+        stock_out: 0,
+        date: new Date().toISOString().split('T')[0],
+        remark
+      });
+
+      fetchProducts();
+      alert("Stock added successfully!");
+    } catch (error) {
+      console.error("Error adding stock:", error);
+      alert("Failed to add stock");
+    }
+  };
+
+  const handleDeductStock = async ({ quantity, remark }) => {
+    try {
+      const response = await axios.post(`${baseurl}/stock/${selectedProductId}`, {
+        stock_in: 0,
+        stock_out: quantity,
+        date: new Date().toISOString().split('T')[0],
+        remark
+      });
+
+      fetchProducts();
+      alert("Stock deducted successfully!");
+    } catch (error) {
+      console.error("Error deducting stock:", error);
+      alert("Failed to deduct stock");
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${baseurl}/products`);
+      const formatted = response.data
+        .filter(item => item.group_by === "Salescatalog")
+        .map(item => ({
+          id: item.id,
+          name: item.goods_name,
+          price: item.price,
+          description: item.description,
+          gst: item.gst_rate,
+          updatedBy: 'System',
+          updatedOn: new Date(item.updated_at).toLocaleDateString(),
+          opening_stock: item.opening_stock || 0,
+          stock_in: item.stock_in || 0,
+          stock_out: item.stock_out || 0,
+          balance_stock: item.balance_stock || 0
+        }));
+      setItems(formatted);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchProducts();
-    alert("Stock added successfully!");
-  } catch (error) {
-    console.error("Error adding stock:", error);
-    alert("Failed to add stock");
-  }
-};
-
-const handleDeductStock = async ({ quantity, remark }) => {
-  try {
-    const response = await axios.post(`${baseurl}/stock/${selectedProductId}`, {
-      stock_in: 0,
-      stock_out: quantity,
-      date: new Date().toISOString().split('T')[0],
-      remark
-    });
-    
-    fetchProducts();
-    alert("Stock deducted successfully!");
-  } catch (error) {
-    console.error("Error deducting stock:", error);
-    alert("Failed to deduct stock");
-  }
-};
-
-const fetchProducts = async () => {
-  try {
-    const response = await axios.get(`${baseurl}/products`);
-    const formatted = response.data
-      .filter(item => item.group_by === "Salescatalog")
-      .map(item => ({
-        id: item.id,
-        name: item.goods_name,
-        price: item.price,
-        description: item.description,
-        gst: item.gst_rate,
-        updatedBy: 'System',
-        updatedOn: new Date(item.updated_at).toLocaleDateString(),
-        opening_stock: item.opening_stock || 0,
-        stock_in: item.stock_in || 0,
-        stock_out: item.stock_out || 0,
-        balance_stock: item.balance_stock || 0
-      }));
-    setItems(formatted);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
-useEffect(() => {
-  fetchProducts();
-}, [])
+  }, [])
 
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(search.toLowerCase())
@@ -130,15 +131,15 @@ useEffect(() => {
                 </div>
 
                 <AddProductModal
-                 show={showProductModal} 
-                onClose={() => setShowProductModal(false)}
-                groupType="Salescatalog"
-                 />
+                  show={showProductModal}
+                  onClose={() => setShowProductModal(false)}
+                  groupType="Salescatalog"
+                />
 
-                <AddServiceModal show={showServiceModal} 
-                onClose={() => setShowServiceModal(false)}
-                 groupType="Salescatalog"
-                  />
+                <AddServiceModal show={showServiceModal}
+                  onClose={() => setShowServiceModal(false)}
+                  groupType="Salescatalog"
+                />
                 <div className="d-flex gap-2">
                   <button className="btn btn-warning">Bulk Upload</button>
                   <button className="btn btn-info">Export</button>
@@ -192,9 +193,11 @@ useEffect(() => {
                         <tr key={index} className="align-middle">
                           <td>
                             <FaShoppingBag className="me-2 text-info" />
-                            <a href={`/product-details/${item.name}`} className="text-primary text-decoration-none">
+                            <Link to={`/product-details/${item.id}`} className="text-primary text-decoration-none">
                               {item.name}
-                            </a>
+                            </Link>
+
+
                             <br />
                             <span className="text-muted">RS. {item.price}</span>
                           </td>
@@ -208,48 +211,48 @@ useEffect(() => {
                           <td>
                             <FaEdit className="text-success me-2 action-icon" title="Edit" />
                             <FaTrash className="text-danger me-2 action-icon" title="Delete" />
-                           <FaPlusCircle
-  className="text-warning me-2 action-icon"
-  title="Add"
-  onClick={() => {
-    setSelectedProductId(item.id); // Make sure your API response includes product id
-    setCurrentStockData({
-      opening_stock: item.opening_stock,
-      stock_in: item.stock_in,
-      stock_out: item.stock_out,
-      balance_stock: item.balance_stock
-    });
-    setShowStockModal(true);
-  }}
-/>
-<FaMinusCircle
-  className="text-danger me-2 action-icon"
-  title="Remove"
-  onClick={() => {
-    setSelectedProductId(item.id);
-    setCurrentStockData({
-      opening_stock: item.opening_stock,
-      stock_in: item.stock_in,
-      stock_out: item.stock_out,
-      balance_stock: item.balance_stock
-    });
-    setShowDeductModal(true);
-  }}
-/>
-                           <FaEye
-  className="text-primary action-icon"
-  title="View"
-  onClick={() => {
-    setStockData({
-      ...item,
-      opening_stock: item.opening_stock || 0,
-      stock_in: item.stock_in || 0,
-      stock_out: item.stock_out || 0,
-      balance_stock: item.balance_stock || 0
-    });
-    setShowViewModal(true);
-  }}
-/>
+                            <FaPlusCircle
+                              className="text-warning me-2 action-icon"
+                              title="Add"
+                              onClick={() => {
+                                setSelectedProductId(item.id); // Make sure your API response includes product id
+                                setCurrentStockData({
+                                  opening_stock: item.opening_stock,
+                                  stock_in: item.stock_in,
+                                  stock_out: item.stock_out,
+                                  balance_stock: item.balance_stock
+                                });
+                                setShowStockModal(true);
+                              }}
+                            />
+                            <FaMinusCircle
+                              className="text-danger me-2 action-icon"
+                              title="Remove"
+                              onClick={() => {
+                                setSelectedProductId(item.id);
+                                setCurrentStockData({
+                                  opening_stock: item.opening_stock,
+                                  stock_in: item.stock_in,
+                                  stock_out: item.stock_out,
+                                  balance_stock: item.balance_stock
+                                });
+                                setShowDeductModal(true);
+                              }}
+                            />
+                            <FaEye
+                              className="text-primary action-icon"
+                              title="View"
+                              onClick={() => {
+                                setStockData({
+                                  ...item,
+                                  opening_stock: item.opening_stock || 0,
+                                  stock_in: item.stock_in || 0,
+                                  stock_out: item.stock_out || 0,
+                                  balance_stock: item.balance_stock || 0
+                                });
+                                setShowViewModal(true);
+                              }}
+                            />
                           </td>
                         </tr>
                       ))}
@@ -286,26 +289,26 @@ useEffect(() => {
         </div>
       </div>
 
-         <AddStockModal
-  show={showStockModal}
-  onClose={() => setShowStockModal(false)}
-  currentStock={currentStockData.balance_stock}
-  onSave={handleAddStock}
-/>
+      <AddStockModal
+        show={showStockModal}
+        onClose={() => setShowStockModal(false)}
+        currentStock={currentStockData.balance_stock}
+        onSave={handleAddStock}
+      />
 
-<DeductStockModal
-  show={showDeductModal}
-  onClose={() => setShowDeductModal(false)}
-  currentStock={currentStockData.balance_stock}
-  onSave={handleDeductStock}
-/>
+      <DeductStockModal
+        show={showDeductModal}
+        onClose={() => setShowDeductModal(false)}
+        currentStock={currentStockData.balance_stock}
+        onSave={handleDeductStock}
+      />
 
-    <StockDetailsModal
-  show={showViewModal}
-  onClose={() => setShowViewModal(false)}
-  stockData={stockData}
-  context="sales"
-/>
+      <StockDetailsModal
+        show={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        stockData={stockData}
+        context="sales"
+      />
     </>
   );
 };

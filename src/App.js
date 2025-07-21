@@ -72,7 +72,8 @@ function App() {
           <Route path="/upcoming" element={<UpcomingReveivables />} />
            <Route path="/purchased-items" element={<PurchasedItems />} />
             <Route path="/sales-items" element={<SalesItems />} />
-            <Route path="/product-details/:productName" element={<ProductDetails />} />
+            
+            <Route path="/product-details/:id" element={<ProductDetails />} />
 
           // Purchase
 
