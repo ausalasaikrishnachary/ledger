@@ -24,86 +24,135 @@ const PurchasedItems = ({ user }) => {
   const [showDeductModal, setShowDeductModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [stock, setStock] = useState(10);
+  const [productToEdit, setProductToEdit] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [items, setItems] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
-const [currentStockData, setCurrentStockData] = useState({
-  opening_stock: 0,
-  stock_in: 0,
-  stock_out: 0,
-  balance_stock: 0
-});
+  const [currentStockData, setCurrentStockData] = useState({
+    opening_stock: 0,
+    stock_in: 0,
+    stock_out: 0,
+    balance_stock: 0
+  });
 
-  // Fetch data from API
-const handleAddStock = async ({ quantity, remark }) => {
-  try {
-    const response = await axios.post(`${baseurl}/stock/${selectedProductId}`, {
-      stock_in: quantity,
-      stock_out: 0,
-      date: new Date().toISOString().split('T')[0],
-      remark
+  const handleAddStock = async ({ quantity, remark }) => {
+    try {
+      await axios.post(`${baseurl}/stock/${selectedProductId}`, {
+        stock_in: quantity,
+        stock_out: 0,
+        date: new Date().toISOString().split('T')[0],
+        remark
+      });
+      fetchProducts();
+      alert("Stock added successfully!");
+    } catch (error) {
+      console.error("Error adding stock:", error);
+      alert("Failed to add stock");
+    }
+  };
+
+  const handleDeductStock = async ({ quantity, remark }) => {
+    try {
+      await axios.post(`${baseurl}/stock/${selectedProductId}`, {
+        stock_in: 0,
+        stock_out: quantity,
+        date: new Date().toISOString().split('T')[0],
+        remark
+      });
+      fetchProducts();
+      alert("Stock deducted successfully!");
+    } catch (error) {
+      console.error("Error deducting stock:", error);
+      alert("Failed to deduct stock");
+    }
+  };
+
+  const handleEditClick = (product) => {
+    setProductToEdit({
+      id: product.id,
+      goods_name: product.name,
+      price: product.price,
+      description: product.description,
+      gst_rate: product.gst,
+      opening_stock: product.opening_stock,
+      category_id: product.category_id,
+      company_id: product.company_id,
+      inclusive_gst: product.inclusive_gst,
+      non_taxable: product.non_taxable,
+      net_price: product.net_price,
+      hsn_code: product.hsn_code,
+      unit: product.unit,
+      cess_rate: product.cess_rate,
+      cess_amount: product.cess_amount,
+      sku: product.sku,
+      opening_stock_date: product.opening_stock_date,
+      min_stock_alert: product.min_stock_alert,
+      max_stock_alert: product.max_stock_alert,
+      can_be_sold: product.can_be_sold
     });
-    
-    // Refresh the product list
+    setShowProductModal(true);
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(`${baseurl}/products`);
+      const formatted = response.data
+        .filter(item => item.group_by === "Purchaseditems")
+        .map(item => ({
+          id: item.id,
+          name: item.goods_name,
+          price: item.price,
+          description: item.description,
+          gst: item.gst_rate,
+          updatedBy: 'System',
+          updatedOn: new Date(item.updated_at).toLocaleDateString(),
+          opening_stock: item.opening_stock || 0,
+          stock_in: item.stock_in || 0,
+          stock_out: item.stock_out || 0,
+          balance_stock: item.balance_stock || 0,
+          category_id: item.category_id,
+          company_id: item.company_id,
+          inclusive_gst: item.inclusive_gst,
+          non_taxable: item.non_taxable,
+          net_price: item.net_price,
+          hsn_code: item.hsn_code,
+          unit: item.unit,
+          cess_rate: item.cess_rate,
+          cess_amount: item.cess_amount,
+          sku: item.sku,
+          opening_stock_date: item.opening_stock_date,
+          min_stock_alert: item.min_stock_alert,
+          max_stock_alert: item.max_stock_alert,
+          can_be_sold: item.can_be_sold
+        }));
+      setItems(formatted);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchProducts();
-    alert("Stock added successfully!");
-  } catch (error) {
-    console.error("Error adding stock:", error);
-    alert("Failed to add stock");
-  }
-};
-
-const handleDeductStock = async ({ quantity, remark }) => {
-  try {
-    const response = await axios.post(`${baseurl}/stock/${selectedProductId}`, {
-      stock_in: 0,
-      stock_out: quantity,
-      date: new Date().toISOString().split('T')[0],
-      remark
-    });
-    
-    // Refresh the product list
-    fetchProducts();
-    alert("Stock deducted successfully!");
-  } catch (error) {
-    console.error("Error deducting stock:", error);
-    alert("Failed to deduct stock");
-  }
-};
-
-// Extract your data fetching into a separate function
-const fetchProducts = async () => {
-  try {
-    const response = await axios.get(`${baseurl}/products`);
-    const formatted = response.data
-      .filter(item => item.group_by === "Purchaseditems")
-      .map(item => ({
-        id: item.id, // Make sure this matches your API response
-        name: item.goods_name,
-        price: item.price,
-        description: item.description,
-        gst: item.gst_rate,
-        updatedBy: 'System',
-        updatedOn: new Date(item.updated_at).toLocaleDateString(),
-        opening_stock: item.opening_stock || 0,
-        stock_in: item.stock_in || 0,
-        stock_out: item.stock_out || 0,
-        balance_stock: item.balance_stock || 0
-      }));
-    setItems(formatted);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
-// Update your useEffect to use the new fetch function
-useEffect(() => {
-  fetchProducts();
-}, []);
+  }, []);
 
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleDeleteProduct = async (productId) => {
+    console.log("id", productId);
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        await axios.delete(`${baseurl}/products/${productId}`);
+        alert("Product deleted successfully!");
+        fetchProducts();
+      } catch (error) {
+        console.error("Full error details:", error);
+        console.error("Response data:", error.response?.data);
+        alert(`Failed to delete product: ${error.response?.data?.message || error.message}`);
+      }
+    }
+  };
 
   return (
     <>
@@ -156,12 +205,20 @@ useEffect(() => {
                   </div>
                 </div>
 
-                <AddProductModal show={showProductModal} onClose={() => setShowProductModal(false)}
-                groupType="Purchaseditems"
-                 />
-                <AddServiceModal show={showServiceModal} onClose={() => setShowServiceModal(false)}
-                groupType="Purchaseditems"
-                 />
+                <AddProductModal
+                  show={showProductModal} 
+                  onClose={() => {
+                    setShowProductModal(false);
+                    setProductToEdit(null);
+                  }}
+                  groupType="Purchaseditems"
+                  productToEdit={productToEdit}
+                />
+                <AddServiceModal 
+                  show={showServiceModal} 
+                  onClose={() => setShowServiceModal(false)}
+                  groupType="Purchaseditems"
+                />
 
                 <div className="d-flex gap-2">
                   <button className="btn btn-warning">Bulk Upload</button>
@@ -204,7 +261,7 @@ useEffect(() => {
                   <table className="table table-bordered table-striped text-center">
                     <thead className="table-dark">
                       <tr>
-                        <th>NAME</th>
+                        <th> PRODUCT NAME</th>
                         <th>DESCRIPTION</th>
                         <th>GST RATE</th>
                         <th>UPDATED BY</th>
@@ -216,7 +273,7 @@ useEffect(() => {
                         <tr key={index} className="align-middle">
                           <td>
                             <FaShoppingBag className="me-2 text-info" />
-                            <a href={`/product-details/${item.name}`} className="text-primary text-decoration-none">
+                            <a href={`/product-details/${item.id}`} className="text-primary text-decoration-none">
                               {item.name}
                             </a>
                             <br />
@@ -230,49 +287,57 @@ useEffect(() => {
                             {item.updatedOn}
                           </td>
                           <td>
-                            <FaEdit className="text-success me-2 action-icon" title="Edit" />
-                            <FaTrash className="text-danger me-2 action-icon" title="Delete" />
+                            <FaEdit 
+                              className="text-success me-2 action-icon" 
+                              title="Edit" 
+                              onClick={() => handleEditClick(item)}
+                            />
+                            <FaTrash 
+                              className="text-danger me-2 action-icon" 
+                              title="Delete" 
+                              onClick={() => handleDeleteProduct(item.id)}
+                            />
                             <FaPlusCircle
-  className="text-warning me-2 action-icon"
-  title="Add"
-  onClick={() => {
-    setSelectedProductId(item.id); // Make sure your API response includes product id
-    setCurrentStockData({
-      opening_stock: item.opening_stock,
-      stock_in: item.stock_in,
-      stock_out: item.stock_out,
-      balance_stock: item.balance_stock
-    });
-    setShowStockModal(true);
-  }}
-/>
-<FaMinusCircle
-  className="text-danger me-2 action-icon"
-  title="Remove"
-  onClick={() => {
-    setSelectedProductId(item.id);
-    setCurrentStockData({
-      opening_stock: item.opening_stock,
-      stock_in: item.stock_in,
-      stock_out: item.stock_out,
-      balance_stock: item.balance_stock
-    });
-    setShowDeductModal(true);
-  }}
-/>
-  <FaEye
-  className="text-primary action-icon"
-  title="View"
-  onClick={() => {
-    setSelectedItem({
-      ...item,
-      stock_in: item.stock_in || 0,
-      stock_out: item.stock_out || 0,
-      balance_stock: item.balance_stock || 0
-    });
-    setShowViewModal(true);
-  }}
-/>
+                              className="text-warning me-2 action-icon"
+                              title="Add"
+                              onClick={() => {
+                                setSelectedProductId(item.id);
+                                setCurrentStockData({
+                                  opening_stock: item.opening_stock,
+                                  stock_in: item.stock_in,
+                                  stock_out: item.stock_out,
+                                  balance_stock: item.balance_stock
+                                });
+                                setShowStockModal(true);
+                              }}
+                            />
+                            <FaMinusCircle
+                              className="text-danger me-2 action-icon"
+                              title="Remove"
+                              onClick={() => {
+                                setSelectedProductId(item.id);
+                                setCurrentStockData({
+                                  opening_stock: item.opening_stock,
+                                  stock_in: item.stock_in,
+                                  stock_out: item.stock_out,
+                                  balance_stock: item.balance_stock
+                                });
+                                setShowDeductModal(true);
+                              }}
+                            />
+                            <FaEye
+                              className="text-primary action-icon"
+                              title="View"
+                              onClick={() => {
+                                setSelectedItem({
+                                  ...item,
+                                  stock_in: item.stock_in || 0,
+                                  stock_out: item.stock_out || 0,
+                                  balance_stock: item.balance_stock || 0
+                                });
+                                setShowViewModal(true);
+                              }}
+                            />
                           </td>
                         </tr>
                       ))}
@@ -310,28 +375,28 @@ useEffect(() => {
       </div>
 
       <AddStockModal
-  show={showStockModal}
-  onClose={() => setShowStockModal(false)}
-  currentStock={currentStockData.balance_stock}
-  onSave={handleAddStock}
-/>
+        show={showStockModal}
+        onClose={() => setShowStockModal(false)}
+        currentStock={currentStockData.balance_stock}
+        onSave={handleAddStock}
+      />
 
-<DeductStockModal
-  show={showDeductModal}
-  onClose={() => setShowDeductModal(false)}
-  currentStock={currentStockData.balance_stock}
-  onSave={handleDeductStock}
-/>
+      <DeductStockModal
+        show={showDeductModal}
+        onClose={() => setShowDeductModal(false)}
+        currentStock={currentStockData.balance_stock}
+        onSave={handleDeductStock}
+      />
 
-  <StockDetailsModal
-  show={showViewModal}
-  onClose={() => {
-    setShowViewModal(false);
-    setSelectedItem(null);
-  }}
-  stockData={selectedItem}
-  context="purchase"
-/>
+      <StockDetailsModal
+        show={showViewModal}
+        onClose={() => {
+          setShowViewModal(false);
+          setSelectedItem(null);
+        }}
+        stockData={selectedItem}
+        context="purchase"
+      />
     </>
   );
 };

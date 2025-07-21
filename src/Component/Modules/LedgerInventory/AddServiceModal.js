@@ -106,8 +106,8 @@ const AddServiceModal = ({ show, onClose, groupType }) => {
                 value={formData.inclusive_gst}
                 onChange={handleChange}
               >
-                <option>Inclusive of GST</option>
-                <option>Exclusive of GST</option>
+                <option value="Inclusive">Inclusive of GST</option>
+                <option value="Exclusive">Exclusive of GST</option>
               </Form.Select>
             </div>
           </div>
