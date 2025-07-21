@@ -6,7 +6,7 @@ import AddCategoryModal from "./AddCategoryModal";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const AddProductModal = ({ show, onClose, groupType }) => {
+const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
   const [showCompanyModal, setShowCompanyModal] = useState(false);
   const [companyOptions, setCompanyOptions] = useState([]);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -44,8 +44,8 @@ const AddProductModal = ({ show, onClose, groupType }) => {
     category_id: "",
     company_id: "",
     price: "",
-    inclusive_gst: "Inclusive of GST",
-    gst_rate: "GST Rate 18%",
+    inclusive_gst: "",
+    gst_rate: "",
     non_taxable: "",
     net_price: "",
     hsn_code: "",
@@ -57,9 +57,62 @@ const AddProductModal = ({ show, onClose, groupType }) => {
     opening_stock_date: "",
     min_stock_alert: "",
     max_stock_alert: "",
-    can_be_sold: '',
+    can_be_sold: false,
     description: ""
   });
+
+   // Reset form when productToEdit or groupType changes
+  useEffect(() => {
+    if (productToEdit) {
+      // If editing, populate form with existing product data
+      setFormData({
+        group_by: productToEdit.group_by || groupType,
+        goods_name: productToEdit.goods_name || "",
+        category_id: productToEdit.category_id || "",
+        company_id: productToEdit.company_id || "",
+        price: productToEdit.price || "",
+        inclusive_gst: productToEdit.inclusive_gst || "",
+        gst_rate: productToEdit.gst_rate || "",
+        non_taxable: productToEdit.non_taxable || "",
+        net_price: productToEdit.net_price || "",
+        hsn_code: productToEdit.hsn_code || "",
+        unit: productToEdit.unit || "UNT-UNITS",
+        cess_rate: productToEdit.cess_rate || "",
+        cess_amount: productToEdit.cess_amount || "",
+        sku: productToEdit.sku || "",
+        opening_stock: productToEdit.opening_stock || "",
+        opening_stock_date: productToEdit.opening_stock_date || "",
+        min_stock_alert: productToEdit.min_stock_alert || "",
+        max_stock_alert: productToEdit.max_stock_alert || "",
+        can_be_sold: productToEdit.can_be_sold || false,
+        description: productToEdit.description || ""
+      });
+    } else {
+      // If adding new, reset form with groupType
+      setFormData({
+        group_by: groupType,
+        goods_name: "",
+        category_id: "",
+        company_id: "",
+        price: "",
+        inclusive_gst: "",
+        gst_rate: "",
+        non_taxable: "",
+        net_price: "",
+        hsn_code: "",
+        unit: "UNT-UNITS",
+        cess_rate: "",
+        cess_amount: "",
+        sku: "",
+        opening_stock: "",
+        opening_stock_date: "",
+        min_stock_alert: "",
+        max_stock_alert: "",
+        can_be_sold: false,
+        description: ""
+      });
+    }
+  }, [productToEdit, groupType]);
 
    useEffect(() => {
     setFormData(prev => ({
@@ -77,18 +130,32 @@ const AddProductModal = ({ show, onClose, groupType }) => {
   };
 
  const handleSubmit = async (e) => {
-  e.preventDefault();
-  console.log("Submitting product data:", formData);
+    e.preventDefault();
+    console.log("Submitting product data:", formData);
 
-  try {
-    const response = await axios.post("http://localhost:5000/products", formData, {
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    console.log("✅ Product added successfully!");
-    console.log("Response:", response.data);
-    onClose();
-    alert("submitted sucessfully");
+    try {
+      let response;
+      if (productToEdit) {
+        // Edit existing product
+        response = await axios.put(
+          `http://localhost:5000/products/${productToEdit.id}`,
+          formData,
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+        console.log("✅ Product updated successfully!");
+      } else {
+        // Add new product
+        response = await axios.post(
+          "http://localhost:5000/products",
+          formData,
+          { headers: { 'Content-Type': 'application/json' } }
+        );
+        console.log("✅ Product added successfully!");
+      }
+      
+      console.log("Response:", response.data);
+      onClose();
+      alert(productToEdit ? "Updated successfully!" : "Submitted successfully!");
   } catch (error) {
     console.error("❌ Failed to add product.");
 
@@ -106,21 +173,24 @@ const AddProductModal = ({ show, onClose, groupType }) => {
   }
 };
 
+ // Update modal title based on mode
+  const modalTitle = productToEdit 
+    ? `Edit Product in ${groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"}`
+    : `Add Product to ${groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"}`;
+
 
   return (
     <>
       <Modal show={show} onHide={onClose} size="lg" backdrop="static">
         <Modal.Header closeButton>
-          <Modal.Title>
-            Add Product to {groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"}
-          </Modal.Title>
+             <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <div className="row mb-3">
               <div className="col">
                 <Form.Control 
-                  placeholder="Goods Name" 
+                  placeholder="Product Name" 
                   name="goods_name"
                   value={formData.goods_name}
                   onChange={handleChange}
@@ -179,29 +249,29 @@ const AddProductModal = ({ show, onClose, groupType }) => {
                 />
               </div>
               <div className="col">
-                <Form.Select
-                  name="inclusive_gst"
-                  value={formData.inclusive_gst}
-                  onChange={handleChange}
-                >
-                  <option>Inclusive of GST</option>
-                  <option>Exclusive of GST</option>
-                </Form.Select>
+                 <Form.Select
+    name="inclusive_gst"
+    value={formData.inclusive_gst}
+    onChange={handleChange}
+  >
+    <option value="Inclusive">Inclusive of GST</option>
+    <option value="Exclusive">Exclusive of GST</option>
+  </Form.Select>
               </div>
             </div>
 
             <div className="row mb-3">
               <div className="col">
-                <Form.Select
-                  name="gst_rate"
-                  value={formData.gst_rate}
-                  onChange={handleChange}
-                >
-                  <option>GST Rate 18%</option>
-                  <option>GST Rate 12%</option>
-                  <option>GST Rate 5%</option>
-                  <option>GST Rate 0%</option>
-                </Form.Select>
+                  <Form.Select
+      name="gst_rate"
+      value={formData.gst_rate}
+      onChange={handleChange}
+    >
+      <option value="18%">GST Rate 18%</option>
+      <option value="12%">GST Rate 12%</option>
+      <option value="5%">GST Rate 5%</option>
+      <option value="0%">GST Rate 0%</option>
+    </Form.Select>
               </div>
               <div className="col">
                 <Form.Control 

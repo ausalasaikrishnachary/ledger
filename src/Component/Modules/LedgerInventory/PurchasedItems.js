@@ -24,6 +24,7 @@ const PurchasedItems = ({ user }) => {
   const [showDeductModal, setShowDeductModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [stock, setStock] = useState(10);
+  const [productToEdit, setProductToEdit] = useState(null);
   const [selectedItem, setSelectedItem] = useState(null);
   const [items, setItems] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
@@ -71,6 +72,33 @@ const handleDeductStock = async ({ quantity, remark }) => {
   }
 };
 
+  const handleEditClick = (product) => {
+    setProductToEdit({
+      id: product.id,
+      goods_name: product.name,
+      price: product.price,
+      description: product.description,
+      gst_rate: product.gst,
+      opening_stock: product.opening_stock,
+       category_id: product.category_id,
+          company_id: product.company_id,
+          inclusive_gst: product.inclusive_gst,
+          non_taxable: product.non_taxable,
+          net_price: product.net_price,
+          hsn_code: product.hsn_code,
+          unit: product.unit,
+          cess_rate: product.cess_rate,
+          cess_amount: product.cess_amount,
+          sku: product.sku,
+          opening_stock_date: product.opening_stock_date,
+          min_stock_alert: product.min_stock_alert,
+          max_stock_alert: product.max_stock_alert,
+          can_be_sold: product.can_be_sold
+      // Add other fields you want to edit
+    });
+    setShowProductModal(true);
+  };
+
 // Extract your data fetching into a separate function
 const fetchProducts = async () => {
   try {
@@ -88,7 +116,21 @@ const fetchProducts = async () => {
         opening_stock: item.opening_stock || 0,
         stock_in: item.stock_in || 0,
         stock_out: item.stock_out || 0,
-        balance_stock: item.balance_stock || 0
+        balance_stock: item.balance_stock || 0,
+          category_id: item.category_id,
+          company_id: item.company_id,
+          inclusive_gst: item.inclusive_gst,
+          non_taxable: item.non_taxable,
+          net_price: item.net_price,
+          hsn_code: item.hsn_code,
+          unit: item.unit,
+          cess_rate: item.cess_rate,
+          cess_amount: item.cess_amount,
+          sku: item.sku,
+          opening_stock_date: item.opening_stock_date,
+          min_stock_alert: item.min_stock_alert,
+          max_stock_alert: item.max_stock_alert,
+          can_be_sold: item.can_be_sold
       }));
     setItems(formatted);
   } catch (error) {
@@ -104,6 +146,21 @@ useEffect(() => {
   const filteredItems = items.filter(item =>
     item.name.toLowerCase().includes(search.toLowerCase())
   );
+
+  const handleDeleteProduct = async (productId) => {
+  console.log("id", productId);
+  if (window.confirm("Are you sure you want to delete this product?")) {
+    try {
+      await axios.delete(`${baseurl}/products/${productId}`);
+      alert("Product deleted successfully!");
+      fetchProducts();
+    } catch (error) {
+      console.error("Full error details:", error);
+      console.error("Response data:", error.response?.data);
+      alert(`Failed to delete product: ${error.response?.data?.message || error.message}`);
+    }
+  }
+};
 
   return (
     <>
@@ -156,9 +213,15 @@ useEffect(() => {
                   </div>
                 </div>
 
-                <AddProductModal show={showProductModal} onClose={() => setShowProductModal(false)}
-                groupType="Purchaseditems"
-                 />
+                              <AddProductModal
+    show={showProductModal} 
+    onClose={() => {
+      setShowProductModal(false);
+      setProductToEdit(null); // Reset edit state when closing
+    }}
+    groupType="Purchaseditems"
+    productToEdit={productToEdit}
+  />
                 <AddServiceModal show={showServiceModal} onClose={() => setShowServiceModal(false)}
                 groupType="Purchaseditems"
                  />
@@ -204,7 +267,7 @@ useEffect(() => {
                   <table className="table table-bordered table-striped text-center">
                     <thead className="table-dark">
                       <tr>
-                        <th>NAME</th>
+                        <th> PRODUCT NAME</th>
                         <th>DESCRIPTION</th>
                         <th>GST RATE</th>
                         <th>UPDATED BY</th>
@@ -230,8 +293,14 @@ useEffect(() => {
                             {item.updatedOn}
                           </td>
                           <td>
-                            <FaEdit className="text-success me-2 action-icon" title="Edit" />
-                            <FaTrash className="text-danger me-2 action-icon" title="Delete" />
+                               <FaEdit className="text-success me-2 action-icon" title="Edit" 
+                                                        onClick={() => handleEditClick(item)}
+                                                        />
+                                                      <FaTrash 
+                             className="text-danger me-2 action-icon" 
+                             title="Delete" 
+                             onClick={() => handleDeleteProduct(item.id)}
+                           />
                             <FaPlusCircle
   className="text-warning me-2 action-icon"
   title="Add"
