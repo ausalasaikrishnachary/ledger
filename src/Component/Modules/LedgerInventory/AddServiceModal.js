@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 
-const AddServiceModal = ({ show, onClose }) => {
+const AddServiceModal = ({ show, onClose, groupType }) => {
   // Initialize form state
   const [formData, setFormData] = useState({
+    group_by: groupType,
     service_name: "",
     price: "",
     inclusive_gst: "Inclusive of GST",
@@ -38,8 +39,10 @@ const AddServiceModal = ({ show, onClose }) => {
       console.log("✅ Service added successfully!");
       console.log("Response:", response.data);
       onClose(); // Close the modal on success
+      alert("submitted sucessfully");
       // Reset form after successful submission
       setFormData({
+        group_by: groupType,
         service_name: "",
         price: "",
         inclusive_gst: "Inclusive of GST",
@@ -71,7 +74,9 @@ const AddServiceModal = ({ show, onClose }) => {
   return (
     <Modal show={show} onHide={onClose} size="lg" backdrop="static">
       <Modal.Header closeButton>
-        <Modal.Title>Add Services</Modal.Title>
+        <Modal.Title>
+           Add Services {groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"}
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>

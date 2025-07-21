@@ -1,15 +1,22 @@
-// DeductStockModal.js
 import React, { useState } from "react";
 import { Modal, Button, Form, Row, Col } from "react-bootstrap";
 
 const DeductStockModal = ({ show, onClose, currentStock = 0, onSave }) => {
   const [quantity, setQuantity] = useState("");
   const [remark, setRemark] = useState("");
-  const today = new Date().toLocaleDateString("en-GB"); // format: dd-mm-yyyy
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
 
   const handleSave = () => {
     if (quantity && !isNaN(quantity) && parseInt(quantity) > 0) {
-      onSave({ quantity: parseInt(quantity), remark });
+      if (parseInt(quantity) > currentStock) {
+        alert("Deduction amount cannot exceed current stock");
+        return;
+      }
+      onSave({ 
+        quantity: parseInt(quantity), 
+        remark,
+        date
+      });
       setQuantity("");
       setRemark("");
       onClose();
@@ -29,34 +36,43 @@ const DeductStockModal = ({ show, onClose, currentStock = 0, onSave }) => {
           </Col>
           <Col>
             <strong>Date</strong>
-            <div>{today}</div>
+            <div>{date}</div>
           </Col>
         </Row>
 
         <Form.Group className="mb-3">
-          <Form.Label>Enter Quantity to Deduct</Form.Label>
+          <Form.Label>Quantity to Deduct *</Form.Label>
           <Form.Control
+            type="number"
+            min="1"
+            max={currentStock}
             placeholder="Enter Quantity"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
           />
+          <Form.Text className="text-muted">
+            Maximum: {currentStock}
+          </Form.Text>
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Enter Remark (Optional)</Form.Label>
+          <Form.Label>Reason for Deduction *</Form.Label>
           <Form.Control
-            placeholder="Remark"
+            as="textarea"
+            rows={2}
+            placeholder="Enter reason for stock deduction"
             value={remark}
             onChange={(e) => setRemark(e.target.value)}
+            required
           />
         </Form.Group>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onClose}>
-          Close
+          Cancel
         </Button>
-        <Button variant="dark" onClick={handleSave}>
-          Save
+        <Button variant="danger" onClick={handleSave}>
+          Confirm Deduction
         </Button>
       </Modal.Footer>
     </Modal>
