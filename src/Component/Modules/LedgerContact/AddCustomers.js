@@ -544,6 +544,8 @@ const AddCustomerForm = ({ user }) => {
   const [activeTab, setActiveTab] = useState('information');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const [isLoadingGstin, setIsLoadingGstin] = useState(false);
+  const [gstinError, setGstinError] = useState(null);
   
   const [formData, setFormData] = useState({
     group: "customer",
@@ -616,6 +618,65 @@ const AddCustomerForm = ({ user }) => {
       fetchCustomer();
     }
   }, [id]);
+
+    const handleGstinChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
+    }
+
+    // Only make API call if GSTIN is 15 characters (valid length)
+    if (name === 'gstin' && value.length === 15) {
+      try {
+        setIsLoadingGstin(true);
+        setGstinError(null);
+        
+        const response = await axios.post(`${baseurl}/gstin-details`, { gstin: value });
+        
+        if (response.data.success && response.data.result) {
+          const result = response.data.result;
+          const addr = result.pradr?.addr || {};
+          
+          // Construct address lines
+          const addressLine1 = `${addr.bno || ''}${addr.bno && addr.flno ? ', ' : ''}${addr.flno || ''}`.trim();
+          const addressLine2 = `${addr.st || ''}${addr.st && addr.bnm ? ', ' : ''}${addr.bnm || ''}${(addr.st || addr.bnm) && addr.loc ? ', ' : ''}${addr.loc || ''}`.trim();
+          
+          // Update form data with the fetched values
+          setFormData(prev => ({
+            ...prev,
+            gst_registered_name: result.lgnm || '',
+            business_name: result.tradeNam || '',
+            additional_business_name: result.tradeNam || '',
+            display_name: result.lgnm || '',
+            shipping_address_line1: addressLine1,
+            shipping_address_line2: addressLine2,
+            shipping_city: result.ctj || '',
+            shipping_pin_code: addr.pncd || '',
+            shipping_state: addr.stcd || '',
+            shipping_country: 'India',
+            // Also update billing address by default
+            billing_address_line1: addressLine1,
+            billing_address_line2: addressLine2,
+            billing_city: result.ctj || '',
+            billing_pin_code: addr.pncd || '',
+            billing_state: addr.stcd || '',
+            billing_country: 'India'
+          }));
+          
+          // Set same as shipping address to true since we're populating both
+          setSameAsShipping(true);
+        }
+      } catch (error) {
+        setGstinError('Failed to fetch GSTIN details. Please enter manually.');
+        console.error('Error fetching GSTIN details:', error);
+      } finally {
+        setIsLoadingGstin(false);
+      }
+    }
+  };
 
   const tabs = [
     { id: 'information', label: 'Information' },
@@ -794,10 +855,20 @@ const AddCustomerForm = ({ user }) => {
               </div>
 
               <div className="mb-3">
-                <label className="customer-form-label">Customer GSTIN*</label>
-                <input type="text" name="gstin" value={formData.gstin} className={getInputClass('gstin')} onChange={handleChange} required />
-                {renderError('gstin')}
-              </div>
+    <label className="customer-form-label">Customer GSTIN*</label>
+    <input 
+      type="text" 
+      name="gstin" 
+      value={formData.gstin} 
+      className={getInputClass('gstin')} 
+      onChange={handleGstinChange} 
+      required 
+      maxLength="15"
+    />
+    {isLoadingGstin && <div className="text-muted small">Fetching details...</div>}
+    {gstinError && <div className="text-danger small">{gstinError}</div>}
+    {renderError('gstin')}
+  </div>
 
               <div className="mb-3">
                 <label className="customer-form-label">Business Name*</label>
