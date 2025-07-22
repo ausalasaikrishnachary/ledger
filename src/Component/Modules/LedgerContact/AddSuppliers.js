@@ -707,7 +707,7 @@ const AddSupplierForm = ({ user }) => {
     if (id) {
       const fetchSupplier = async () => {
         try {
-          const response = await axios.get(`${baseurl}accounts/${id}`);
+          const response = await axios.get(`${baseurl}/accounts/${id}`);
           setFormData(response.data);
           setIsEditing(true);
           
@@ -799,10 +799,10 @@ const AddSupplierForm = ({ user }) => {
     try {
       let response;
       if (isEditing) {
-        response = await axios.put(`${baseurl}accounts/${id}`, finalData);
+        response = await axios.put(`${baseurl}/accounts/${id}`, finalData);
         alert('Supplier updated successfully!');
       } else {
-        response = await axios.post(`${baseurl}accounts`, finalData);
+        response = await axios.post(`${baseurl}/accounts`, finalData);
         alert('Supplier added successfully!');
       }
 

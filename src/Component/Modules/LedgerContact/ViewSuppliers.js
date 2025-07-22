@@ -378,7 +378,7 @@ const ViewSuppliers = ({ user }) => {
 
   const fetchSuppliers = async () => {
     try {
-      const res = await axios.get(`${baseurl}accounts`);
+      const res = await axios.get(`${baseurl}/accounts`);
       const filteredSuppliers = res.data.filter(
         (supplier) => supplier.group === "supplier"
       );
@@ -415,7 +415,7 @@ const ViewSuppliers = ({ user }) => {
 
   const handleDeleteSupplier = async (supplier) => {
     try {
-      await axios.delete(`${baseurl}accounts/${supplier.id}`);
+      await axios.delete(`${baseurl}/accounts/${supplier.id}`);
       fetchSuppliers(); // Refresh the list after deletion
       // Reset to first page if we're on a page that might now be empty
       if (currentItems.length === 1 && currentPage > 1) {

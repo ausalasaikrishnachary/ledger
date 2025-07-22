@@ -714,10 +714,10 @@ const AddCustomerForm = ({ user }) => {
 
     try {
       if (isEditing) {
-        await axios.put(`${baseurl}accounts/${id}`, finalData);
+        await axios.put(`${baseurl}/accounts/${id}`, finalData);
         alert('Customer updated successfully!');
       } else {
-        await axios.post(`${baseurl}accounts`, finalData);
+        await axios.post(`${baseurl}/accounts`, finalData);
         alert('Customer added successfully!');
       }
       navigate('/view-customers');

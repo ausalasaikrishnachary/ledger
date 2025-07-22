@@ -396,7 +396,7 @@ const ViewCustomers = ({ user }) => {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get(`${baseurl}accounts`);
+      const response = await axios.get(`${baseurl}/accounts`);
       const customers = response.data.filter((cust) => cust.group === "customer");
       setCustomers(customers);
     } catch (error) {
@@ -431,7 +431,7 @@ const ViewCustomers = ({ user }) => {
 
   const handleDeleteCustomer = async (customer) => {
     try {
-      await axios.delete(`${baseurl}accounts/${customer.id}`);
+      await axios.delete(`${baseurl}/accounts/${customer.id}`);
       fetchCustomers(); // Refresh the list after deletion
       // Reset to first page if we're on a page that might now be empty
       if (currentItems.length === 1 && currentPage > 1) {
