@@ -5,6 +5,7 @@ import AddCompanyModal from "./AddCompanyModal";
 import AddCategoryModal from "./AddCategoryModal";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { baseurl } from "../../BaseURL/BaseURL";
 
 const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
   const [showCompanyModal, setShowCompanyModal] = useState(false);
@@ -21,7 +22,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/categories");
+      const response = await axios.get(`${baseurl}/categories`);
       setCategoryOptions(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
@@ -30,7 +31,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
 
   const fetchCompanies = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/companies");
+      const response = await axios.get(`${baseurl}/companies`);
       setCompanyOptions(response.data);
     } catch (error) {
       console.error("Error fetching companies:", error);
@@ -138,7 +139,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
       if (productToEdit) {
         // Edit existing product
         response = await axios.put(
-          `http://localhost:5000/products/${productToEdit.id}`,
+          `${baseurl}/products/${productToEdit.id}`,
           formData,
           { headers: { 'Content-Type': 'application/json' } }
         );
@@ -146,7 +147,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
       } else {
         // Add new product
         response = await axios.post(
-          "http://localhost:5000/products",
+          `${baseurl}/products`,
           formData,
           { headers: { 'Content-Type': 'application/json' } }
         );

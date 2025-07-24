@@ -145,6 +145,9 @@ const TableLayout = ({
                   <div>{item.email}</div>
                 </td>
                 <td>
+                  <div>{item.shipping_city}</div>
+                </td>
+                <td>
                   <div>PAN: {item.pan || 'N/A'}</div>
                   <div>GSTIN: {item.gstin || 'N/A'}</div>
                 </td>

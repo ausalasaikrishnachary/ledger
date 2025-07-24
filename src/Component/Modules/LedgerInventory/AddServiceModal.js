@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
+import { baseurl } from "../../BaseURL/BaseURL";
 
 const AddServiceModal = ({ show, onClose, groupType }) => {
   // Initialize form state
@@ -32,7 +33,7 @@ const AddServiceModal = ({ show, onClose, groupType }) => {
     console.log("Submitting service data:", formData);
 
     try {
-      const response = await axios.post("http://localhost:5000/services", formData, {
+      const response = await axios.post(`${baseurl}/services`, formData, {
         headers: { 'Content-Type': 'application/json' }
       });
 

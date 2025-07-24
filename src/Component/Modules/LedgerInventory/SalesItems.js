@@ -168,10 +168,10 @@ const SalesItems = ({ user }) => {
                 <div className="d-flex gap-2">
                   <div className="dropdown">
                     <button className="btn btn-info dropdown-toggle d-flex align-items-center" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i className="bi bi-list me-2"></i> Sales Catalog
+                      <i className="bi bi-list me-2"></i> Sales Catalogue
                     </button>
                     <ul className="dropdown-menu">
-                      <li><a className="dropdown-item" href="/sales-items">Sales Catalog</a></li>
+                      <li><a className="dropdown-item" href="/sales-items">Sales Catalogue</a></li>
                       <li><a className="dropdown-item" href="/purchased-items">Purchased Items</a></li>
                     </ul>
                   </div>
@@ -347,7 +347,7 @@ const SalesItems = ({ user }) => {
               </div>
 
               <div className="summary-box card mt-3 p-3">
-                <p>Total Active Catalog: {items.length}</p>
+                <p>Total Active Catalogue: {items.length}</p>
                 <p>Total Active Products: {items.length}</p>
                 <p>Total Active Services: 0</p>
               </div>

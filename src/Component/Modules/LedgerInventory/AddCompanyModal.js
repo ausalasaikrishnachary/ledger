@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
+import { baseurl } from "../../BaseURL/BaseURL";
 
 const AddCompanyModal = ({ show, onClose, onSave }) => {
   const [companyName, setCompanyName] = useState("");
@@ -13,7 +14,7 @@ const handleSave = async () => {
   
   setIsSaving(true);
   try {
-    const response = await axios.post("http://localhost:5000/companies", {
+    const response = await axios.post(`${baseurl}/companies`, {
       company_name: companyName
     });
     onSave(response.data); // Pass the full saved company object

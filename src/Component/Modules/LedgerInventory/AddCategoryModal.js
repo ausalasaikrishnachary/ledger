@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
+import { baseurl } from "../../BaseURL/BaseURL";
 
 const AddCategoryModal = ({ show, onClose, onSave }) => {
   const [categoryName, setCategoryName] = useState("");
@@ -13,7 +14,7 @@ const handleSave = async () => {
   
   setIsSaving(true);
   try {
-    const response = await axios.post("http://localhost:5000/categories", {
+    const response = await axios.post(`${baseurl}/categories`, {
       category_name: categoryName
     });
     onSave(response.data); // Pass the full saved category object

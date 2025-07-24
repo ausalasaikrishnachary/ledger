@@ -123,7 +123,7 @@ const Sidebar = ({ user, collapsed, activePage }) => {
               <ul className="pcoded-submenu" style={{ display: activeMenu === 'inventory' ? 'block' : 'none' }}>
                 <li className={isActive('/sales-items') ? 'active' : ''}>
                   {/* <Link to="/manage-products?type=Sales Catalog">Sales Catalog</Link> */}
-                   <Link to="/sales-items">Sales Catalog</Link>
+                   <Link to="/sales-items">Sales catalogue</Link>
                 </li>
                 <li className={isActive('/purchased-items') ? 'active' : ''}>
                   {/* <Link to="/manage-products?type=Purchased Items">Purchased Items</Link> */}
