@@ -12,7 +12,7 @@ const ViewCustomers = ({ user }) => {
   const [customers, setCustomers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(1); // Number of items per page
+  const [itemsPerPage] = useState(5); // Number of items per page
   const navigate = useNavigate();
 
   useEffect(() => {

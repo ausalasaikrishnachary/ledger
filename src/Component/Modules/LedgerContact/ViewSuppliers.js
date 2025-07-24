@@ -11,7 +11,7 @@ const ViewSuppliers = ({ user }) => {
   const [suppliers, setSuppliers] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(1); // You can adjust this number
+  const [itemsPerPage] = useState(5); // You can adjust this number
   const navigate = useNavigate();
 
   useEffect(() => {
