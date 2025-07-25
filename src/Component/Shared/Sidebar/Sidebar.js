@@ -155,8 +155,12 @@ const Sidebar = ({ user, collapsed, activePage }) => {
                 </li>
                  <li className={isActive('/creditNote') ? 'active' : ''}>
                   <Link to="/creditNote">Credit Note</Link>
-                </li> <li className={isActive('/deliveryChallan') ? 'active' : ''}>
+                </li> 
+                <li className={isActive('/deliveryChallan') ? 'active' : ''}>
                   <Link to="/deliveryChallan">Delivery Challan</Link>
+                </li>
+                <li className={isActive('/receivables') ? 'active' : ''}>
+                  <Link to="/receivables">Receivables</Link>
                 </li>
               </ul>
             </li>

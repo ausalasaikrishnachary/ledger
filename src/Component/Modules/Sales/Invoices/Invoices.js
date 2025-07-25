@@ -126,20 +126,40 @@ import UpcomingReveivables from '../Receivables/UpcomingReveivables';
 import '../Sales.css';
 // import Receivables from '../Receivables/Receivables';
 import Receivables from '../Receivables/Receivables';
+import { useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+
+
 const AddSales = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activeTab, setActiveTab] = useState('invoices');
+  // const [activeTab, setActiveTab] = useState('invoices');
+
+  const location = useLocation();
+
+  const getActiveTabFromPath = () => {
+    const path = location.pathname;
+    if (path.includes('/invoices')) return 'invoices';
+    if (path.includes('/receipts')) return 'receipts';
+    if (path.includes('/quotations')) return 'quotations';
+    if (path.includes('/billOfSupply')) return 'billOfSupply';
+    if (path.includes('/creditNote')) return 'creditNote';
+    if (path.includes('/deliveryChallan')) return 'deliveryChallan';
+    if (path.includes('/receivables')) return 'receivables';
+    return 'invoices'; // default fallback
+  };
+
+
+  const activeTab = getActiveTabFromPath();
+
   const [activeReceivablesTab, setActiveReceivablesTab] = useState('outstanding');
-  
+
   // Invoices state
   const [month, setMonth] = useState('July');
   const [year, setYear] = useState('2025');
   const [startDate, setStartDate] = useState('2025-06-08');
   const [endDate, setEndDate] = useState('2025-07-08');
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+
 
   const handleReceivablesTabClick = (tab) => {
     setActiveReceivablesTab(tab);
@@ -276,64 +296,31 @@ const AddSales = ({ user }) => {
 
   return (
     <div className="dashboard-container">
-      <Header 
-        user={user} 
-        toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)} 
+      <Header
+        user={user}
+        toggleSidebar={() => setSidebarCollapsed(!sidebarCollapsed)}
       />
       <div className="content-wrapper">
         <div className={`pcoded-navbar ${sidebarCollapsed ? 'navbar-collapsed' : ''}`}>
-          <Sidebar 
-            user={user} 
-            collapsed={sidebarCollapsed} 
+          <Sidebar
+            user={user}
+            collapsed={sidebarCollapsed}
           />
         </div>
         <div className={`main-content ${sidebarCollapsed ? 'collapsed' : ''}`}>
           <div className="container Sales-form-container">
             <div className="Sales-form-tabs">
-              <div 
-                className={`Sales-tab ${activeTab === 'invoices' ? 'active' : ''}`}
-                onClick={() => handleTabClick('invoices')}
-              >
-                Invoices
-              </div>
-              <div 
-                className={`Sales-tab ${activeTab === 'receipts' ? 'active' : ''}`}
-                onClick={() => handleTabClick('receipts')}
-              >
-                Receipts
-              </div>
-              <div 
-                className={`Sales-tab ${activeTab === 'quotations' ? 'active' : ''}`}
-                onClick={() => handleTabClick('quotations')}
-              >
-                Quotations
-              </div>
-              <div 
-                className={`Sales-tab ${activeTab === 'billOfSupply' ? 'active' : ''}`}
-                onClick={() => handleTabClick('billOfSupply')}
-              >
-                BillOfSupply
-              </div>
-              <div 
-                className={`Sales-tab ${activeTab === 'creditNote' ? 'active' : ''}`}
-                onClick={() => handleTabClick('creditNote')}
-              >
-                CreditNote
-              </div>
-              <div 
-                className={`Sales-tab ${activeTab === 'deliveryChallan' ? 'active' : ''}`}
-                onClick={() => handleTabClick('deliveryChallan')}
-              >
-                DeliveryChallan
-              </div>
-              <div 
-                className={`Sales-tab ${activeTab === 'receivables' ? 'active' : ''}`}
-                onClick={() => handleTabClick('receivables')}
-              >
-                Receivables
-              </div>
+              <Link to="/invoices" style={{ textDecoration: 'none' }} className={`Sales-tab ${activeTab === 'invoices' ? 'active' : ''}`}>Invoices</Link>
+              <Link to="/receipts" style={{ textDecoration: 'none' }} className={`Sales-tab ${activeTab === 'receipts' ? 'active' : ''}`}>Receipts</Link>
+              <Link to="/quotations" style={{ textDecoration: 'none' }} className={`Sales-tab ${activeTab === 'quotations' ? 'active' : ''}`}>Quotations</Link>
+              <Link to="/billOfSupply" style={{ textDecoration: 'none' }} className={`Sales-tab ${activeTab === 'billOfSupply' ? 'active' : ''}`}>BillOfSupply</Link>
+              <Link to="/creditNote" style={{ textDecoration: 'none' }} className={`Sales-tab ${activeTab === 'creditNote' ? 'active' : ''}`}>CreditNote</Link>
+              <Link to="/deliveryChallan" style={{ textDecoration: 'none' }} className={`Sales-tab ${activeTab === 'deliveryChallan' ? 'active' : ''}`}>DeliveryChallan</Link>
+              <Link to="/receivables" style={{ textDecoration: 'none' }} className={`Sales-tab ${activeTab === 'receivables' ? 'active' : ''}`}>Receivables</Link>
             </div>
-            
+
+
+
             {activeTab === 'invoices' && <Invoices />}
             {activeTab === 'receipts' && <Receipts />}
             {activeTab === 'quotations' && <Quotations />}

@@ -42,6 +42,7 @@ import UpcomingPayables from './Component/Modules/Purchases/Payables/UpcomingPay
 import ViewCustomerDetails from './Component/Modules/LedgerContact/ViewCustomerDetails';
 
 import ViewSupplierDetails from './Component/Modules/LedgerContact/ViewSupplierDetails';
+import Receivables from './Component/Modules/Sales/Receivables/Receivables';
 
 
 function App() {
@@ -64,11 +65,13 @@ function App() {
           <Route path="/billOfSupply" element={<BillOfSupply />} />
           <Route path="/creditNote" element={<CreditNote />} />
           <Route path="/deliveryChallan" element={<DeliveryChallan />} />
+           <Route path="/receivables" element={<Receivables />} />
           <Route path="/invoices" element={<Invoices />} />
           <Route path="/Sales" element={<Sales />} />
           <Route path="/ageing" element={<Ageing />} />
           <Route path="/overdue" element={<OverdueReceivables />} />
           <Route path="/partyWise" element={<PartyWiseReceivables />} />
+      
           <Route path="/upcoming" element={<UpcomingReveivables />} />
            <Route path="/purchased-items" element={<PurchasedItems />} />
             <Route path="/sales-items" element={<SalesItems />} />

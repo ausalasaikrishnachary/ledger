@@ -13,3 +13,22 @@
 .searchbarr{
   max-width: 250px;
 }
+.Sales-tab {
+  text-decoration: none !important;   /* REMOVE UNDERLINE */
+  border-bottom: none !important;     /* REMOVE BLUE BORDER */
+  color: #333;                        /* Default text color */
+  background-color: #f8f9fa;
+  padding: 10px 20px;
+  border-radius: 6px;
+  margin-right: 8px;
+  font-weight: 500;
+  display: inline-block;
+}
+
+/* Active tab style (optional tweak) */
+.Sales-tab.active {
+  background-color: #ffffff;
+  color: #007bff;                     /* Bootstrap primary */
+  font-weight: 600;
+  box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
