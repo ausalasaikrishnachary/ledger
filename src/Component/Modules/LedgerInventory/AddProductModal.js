@@ -37,7 +37,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
       console.error("Error fetching companies:", error);
     }
   };
-  
+
   // Initialize form state with IDs instead of names
   const [formData, setFormData] = useState({
     group_by: groupType,
@@ -62,7 +62,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
     description: ""
   });
 
-   // Reset form when productToEdit or groupType changes
+  // Reset form when productToEdit or groupType changes
   useEffect(() => {
     if (productToEdit) {
       // If editing, populate form with existing product data
@@ -115,7 +115,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
     }
   }, [productToEdit, groupType]);
 
-   useEffect(() => {
+  useEffect(() => {
     setFormData(prev => ({
       ...prev,
       group_by: groupType
@@ -130,7 +130,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
     }));
   };
 
- const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Submitting product data:", formData);
 
@@ -153,29 +153,29 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
         );
         console.log("✅ Product added successfully!");
       }
-      
+
       console.log("Response:", response.data);
       onClose();
       alert(productToEdit ? "Updated successfully!" : "Submitted successfully!");
-  } catch (error) {
-    console.error("❌ Failed to add product.");
+    } catch (error) {
+      console.error("❌ Failed to add product.");
 
-    if (error.response) {
-      console.error("Status Code:", error.response.status);
-      console.error("Message:", error.response.data?.message || "Server error");
-      if (error.response.data?.errors) {
-        console.error("Validation Errors:", error.response.data.errors);
+      if (error.response) {
+        console.error("Status Code:", error.response.status);
+        console.error("Message:", error.response.data?.message || "Server error");
+        if (error.response.data?.errors) {
+          console.error("Validation Errors:", error.response.data.errors);
+        }
+      } else if (error.request) {
+        console.error("No response from server. Please check your network or server status.");
+      } else {
+        console.error("Error:", error.message);
       }
-    } else if (error.request) {
-      console.error("No response from server. Please check your network or server status.");
-    } else {
-      console.error("Error:", error.message);
     }
-  }
-};
+  };
 
- // Update modal title based on mode
-  const modalTitle = productToEdit 
+  // Update modal title based on mode
+  const modalTitle = productToEdit
     ? `Edit Product in ${groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"}`
     : `Add Product to ${groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"}`;
 
@@ -184,14 +184,14 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
     <>
       <Modal show={show} onHide={onClose} size="lg" backdrop="static">
         <Modal.Header closeButton>
-             <Modal.Title>{modalTitle}</Modal.Title>
+          <Modal.Title>{modalTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handleSubmit}>
             <div className="row mb-3">
               <div className="col">
-                <Form.Control 
-                  placeholder="Product Name" 
+                <Form.Control
+                  placeholder="Product Name"
                   name="goods_name"
                   value={formData.goods_name}
                   onChange={handleChange}
@@ -199,7 +199,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
                 />
               </div>
               <div className="col d-flex">
-                <Form.Select 
+                <Form.Select
                   className="me-1"
                   name="category_id"
                   value={formData.category_id}
@@ -221,7 +221,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
 
             <div className="row mb-3">
               <div className="col d-flex">
-                <Form.Select 
+                <Form.Select
                   className="me-1"
                   name="company_id"
                   value={formData.company_id}
@@ -240,8 +240,8 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
                 </Button>
               </div>
               <div className="col">
-                <Form.Control 
-                  placeholder="Price" 
+                <Form.Control
+                  placeholder="Price"
                   name="price"
                   type="number"
                   value={formData.price}
@@ -250,33 +250,33 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
                 />
               </div>
               <div className="col">
-                 <Form.Select
-    name="inclusive_gst"
-    value={formData.inclusive_gst}
-    onChange={handleChange}
-  >
-    <option value="Inclusive">Inclusive of GST</option>
-    <option value="Exclusive">Exclusive of GST</option>
-  </Form.Select>
+                <Form.Select
+                  name="inclusive_gst"
+                  value={formData.inclusive_gst}
+                  onChange={handleChange}
+                >
+                  <option value="Inclusive">Inclusive of GST</option>
+                  <option value="Exclusive">Exclusive of GST</option>
+                </Form.Select>
               </div>
             </div>
 
             <div className="row mb-3">
               <div className="col">
-                  <Form.Select
-      name="gst_rate"
-      value={formData.gst_rate}
-      onChange={handleChange}
-    >
-      <option value="18%">GST Rate 18%</option>
-      <option value="12%">GST Rate 12%</option>
-      <option value="5%">GST Rate 5%</option>
-      <option value="0%">GST Rate 0%</option>
-    </Form.Select>
+                <Form.Select
+                  name="gst_rate"
+                  value={formData.gst_rate}
+                  onChange={handleChange}
+                >
+                  <option value="18%">GST Rate 18%</option>
+                  <option value="12%">GST Rate 12%</option>
+                  <option value="5%">GST Rate 5%</option>
+                  <option value="0%">GST Rate 0%</option>
+                </Form.Select>
               </div>
               <div className="col">
-                <Form.Control 
-                  placeholder="Non Taxable" 
+                <Form.Control
+                  placeholder="Non Taxable"
                   name="non_taxable"
                   type="text"
                   value={formData.non_taxable}
@@ -284,8 +284,8 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
                 />
               </div>
               <div className="col">
-                <Form.Control 
-                  placeholder="Net Price | GST" 
+                <Form.Control
+                  placeholder="Net Price | GST"
                   name="net_price"
                   type="number"
                   value={formData.net_price}
@@ -293,8 +293,8 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
                 />
               </div>
               <div className="col">
-                <Form.Control 
-                  placeholder="HSN Code" 
+                <Form.Control
+                  placeholder="HSN Code"
                   name="hsn_code"
                   value={formData.hsn_code}
                   onChange={handleChange}
@@ -316,8 +316,8 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
                 </Form.Select>
               </div>
               <div className="col">
-                <Form.Control 
-                  placeholder="CESS Rate%" 
+                <Form.Control
+                  placeholder="CESS Rate%"
                   name="cess_rate"
                   type="number"
                   value={formData.cess_rate}
@@ -325,8 +325,8 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
                 />
               </div>
               <div className="col">
-                <Form.Control 
-                  placeholder="CESS Amount" 
+                <Form.Control
+                  placeholder="CESS Amount"
                   name="cess_amount"
                   type="number"
                   value={formData.cess_amount}
@@ -337,16 +337,16 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
 
             <div className="row mb-3">
               <div className="col">
-                <Form.Control 
-                  placeholder="SKU" 
+                <Form.Control
+                  placeholder="SKU"
                   name="sku"
                   value={formData.sku}
                   onChange={handleChange}
                 />
               </div>
               <div className="col">
-                <Form.Control 
-                  placeholder="Opening Stock" 
+                <Form.Control
+                  placeholder="Opening Stock"
                   name="opening_stock"
                   type="number"
                   value={formData.opening_stock}
@@ -355,17 +355,17 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
                 />
               </div>
               <div className="col">
-                <Form.Control 
-                  type="date" 
-                  placeholder="Opening Stock Date" 
+                <Form.Control
+                  type="date"
+                  placeholder="Opening Stock Date"
                   name="opening_stock_date"
                   value={formData.opening_stock_date}
                   onChange={handleChange}
                 />
               </div>
               <div className="col">
-                <Form.Control 
-                  placeholder="Min Stock Alert" 
+                <Form.Control
+                  placeholder="Min Stock Alert"
                   name="min_stock_alert"
                   type="number"
                   value={formData.min_stock_alert}
@@ -376,30 +376,33 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
 
             <div className="row mb-3">
               <div className="col">
-                <Form.Control 
-                  placeholder="Max Stock Alert" 
+                <Form.Control
+                  placeholder="Max Stock Alert"
                   name="max_stock_alert"
                   type="number"
                   value={formData.max_stock_alert}
                   onChange={handleChange}
                 />
               </div>
-              <div className="col d-flex align-items-center">
-                <Form.Check 
-                  type="checkbox" 
-                  label="Can be Sold" 
-                  name="can_be_sold"
-                  checked={formData.can_be_sold}
-                  onChange={handleChange}
-                />
-              </div>
+              {groupType !== "Salescatalog" && (
+                <div className="col d-flex align-items-center">
+                  <Form.Check
+                    type="checkbox"
+                    label="Can be Sold"
+                    name="can_be_sold"
+                    checked={formData.can_be_sold}
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
+
             </div>
 
             <Form.Group className="mb-3">
-              <Form.Control 
-                as="textarea" 
-                rows={2} 
-                placeholder="Description" 
+              <Form.Control
+                as="textarea"
+                rows={2}
+                placeholder="Description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
@@ -413,14 +416,14 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
           <Button variant="primary" onClick={handleSubmit}>Submit</Button>
         </Modal.Footer>
       </Modal>
-       <AddCompanyModal
+      <AddCompanyModal
         show={showCompanyModal}
         onClose={() => setShowCompanyModal(false)}
         onSave={(newCompany) => {
           // After saving, refresh the companies list
           fetchCompanies();
           // Set the newly added company as selected
-          setFormData(prev => ({...prev, company_id: newCompany.id}));
+          setFormData(prev => ({ ...prev, company_id: newCompany.id }));
         }}
       />
       <AddCategoryModal
@@ -430,7 +433,7 @@ const AddProductModal = ({ show, onClose, groupType, productToEdit }) => {
           // After saving, refresh the categories list
           fetchCategories();
           // Set the newly added category as selected
-          setFormData(prev => ({...prev, category_id: newCategory.id}));
+          setFormData(prev => ({ ...prev, category_id: newCategory.id }));
         }}
       />
     </>
