@@ -76,7 +76,7 @@ const AddServiceModal = ({ show, onClose, groupType }) => {
     <Modal show={show} onHide={onClose} size="lg" backdrop="static">
       <Modal.Header closeButton>
         <Modal.Title>
-           Add Services {groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"}
+           Add Services {groupType === "Salescatalog" ? "Sales Catalogue" : "Purchased Items"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
