@@ -43,6 +43,7 @@ import ViewCustomerDetails from './Component/Modules/LedgerContact/ViewCustomerD
 
 import ViewSupplierDetails from './Component/Modules/LedgerContact/ViewSupplierDetails';
 import Receivables from './Component/Modules/Sales/Receivables/Receivables';
+import CreateInvoice from './Component/CreateInvoice/CreateInvoice';
 
 
 function App() {
@@ -67,6 +68,7 @@ function App() {
           <Route path="/deliveryChallan" element={<DeliveryChallan />} />
            <Route path="/receivables" element={<Receivables />} />
           <Route path="/invoices" element={<Invoices />} />
+          <Route path="/createinvoice" element={<CreateInvoice />} />
           <Route path="/Sales" element={<Sales />} />
           <Route path="/ageing" element={<Ageing />} />
           <Route path="/overdue" element={<OverdueReceivables />} />
