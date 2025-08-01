@@ -128,11 +128,12 @@ import '../Sales.css';
 import Receivables from '../Receivables/Receivables';
 import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
 
 const AddSales = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   // const [activeTab, setActiveTab] = useState('invoices');
+  const navigate = useNavigate();
 
   const location = useLocation();
 
@@ -163,6 +164,10 @@ const AddSales = ({ user }) => {
 
   const handleReceivablesTabClick = (tab) => {
     setActiveReceivablesTab(tab);
+  };
+
+  const handleCreateClick = () => {
+    navigate("/createinvoice");
   };
 
   // Invoices component
@@ -207,7 +212,9 @@ const AddSales = ({ user }) => {
         </div>
 
         <div className="col-md-auto">
-          <button className="btn btn-info text-white mt-4">Create</button>
+          <button className="btn btn-info text-white mt-4" onClick={handleCreateClick}>
+            Create
+          </button>
         </div>
       </div>
 
