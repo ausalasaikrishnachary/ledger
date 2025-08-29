@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-// import './Quotations.css';
+import { useNavigate } from 'react-router-dom'; // ✅ Import useNavigate
 
 const DebitNote = () => {
+  const navigate = useNavigate(); // ✅ Create navigation instance
+
   const [month, setMonth] = useState('July');
   const [year, setYear] = useState('2025');
   const [startDate, setStartDate] = useState('2025-06-08');
   const [endDate, setEndDate] = useState('2025-07-08');
+
+  const handleCreate = () => {
+    navigate("/createpurchaseorder"); // ✅ Redirect on button click
+  };
 
   return (
     <div className="quotation-container p-3">
@@ -19,7 +25,6 @@ const DebitNote = () => {
               <option>July</option>
               <option>June</option>
               <option>May</option>
-              {/* Add more months if needed */}
             </select>
             <select className="form-select" value={year} onChange={(e) => setYear(e.target.value)}>
               <option>2025</option>
@@ -30,26 +35,41 @@ const DebitNote = () => {
 
         <div className="col-md-auto">
           <button className="btn btn-success mt-4">
-  <i className="bi bi-download me-1"></i> Download 
-</button>
+            <i className="bi bi-download me-1"></i> Download
+          </button>
         </div>
 
         <div className="col-md-auto">
           <label className="form-label mb-1">Select Date Range:</label>
           <div className="d-flex">
-            <input type="date" className="form-control me-2" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
-            <input type="date" className="form-control" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+            <input
+              type="date"
+              className="form-control me-2"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
+            <input
+              type="date"
+              className="form-control"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+            />
           </div>
         </div>
 
         <div className="col-md-auto">
-         <button className="btn btn-success mt-4">
-  <i className="bi bi-download me-1"></i> Download Range
-</button>
+          <button className="btn btn-success mt-4">
+            <i className="bi bi-download me-1"></i> Download Range
+          </button>
         </div>
 
         <div className="col-md-auto">
-          <button className="btn btn-info text-white mt-4">Create</button>
+          <button
+            className="btn btn-info text-white mt-4"
+            onClick={handleCreate} // ✅ Click triggers navigation
+          >
+            Create
+          </button>
         </div>
       </div>
 
@@ -72,20 +92,17 @@ const DebitNote = () => {
         <table className="table table-bordered table-hover text-center">
           <thead className="table-light">
             <tr>
-              <th>
-Supplier Name</th>
+              <th>Supplier Name</th>
               <th>Note Number</th>
-              <th>	Document</th>
-              <th>	Debit Amount</th>
-              <th>	Created</th>
-                            <th>	Action</th>
-
-
+              <th>Document</th>
+              <th>Debit Amount</th>
+              <th>Created</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td colSpan="5">No data available in table</td>
+              <td colSpan="6">No data available in table</td>
             </tr>
           </tbody>
         </table>

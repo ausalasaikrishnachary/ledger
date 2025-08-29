@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
 // import './Quotations.css';
+import { useNavigate } from 'react-router-dom'; // ✅ Import useNavigate
 
 const Voucher = () => {
   const [month, setMonth] = useState('July');
   const [year, setYear] = useState('2025');
   const [startDate, setStartDate] = useState('2025-06-08');
   const [endDate, setEndDate] = useState('2025-07-08');
+  const navigate = useNavigate(); // ✅ Create navigate instance
+
+    const handleCreate = () => {
+    navigate("/createvoucher"); // ✅ Redirect to create purchase order page
+  };
 
   return (
     <div className="quotation-container p-3">
@@ -49,7 +55,7 @@ const Voucher = () => {
         </div>
 
         <div className="col-md-auto">
-          <button className="btn btn-info text-white mt-4">Create</button>
+          <button className="btn btn-info text-white mt-4" onClick={handleCreate}>Create</button>
         </div>
       </div>
 

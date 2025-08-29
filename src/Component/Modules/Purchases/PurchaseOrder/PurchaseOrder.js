@@ -1,11 +1,17 @@
 import React, { useState } from 'react';
-// import './Quotations.css';
+import { useNavigate } from 'react-router-dom'; // ✅ Import useNavigate
 
 const PurchaseOrder = () => {
+  const navigate = useNavigate(); // ✅ Create navigate instance
+
   const [month, setMonth] = useState('July');
   const [year, setYear] = useState('2025');
   const [startDate, setStartDate] = useState('2025-06-08');
   const [endDate, setEndDate] = useState('2025-07-08');
+
+  const handleCreate = () => {
+    navigate("/createpurchaseorder"); // ✅ Redirect to create purchase order page
+  };
 
   return (
     <div className="quotation-container p-3">
@@ -19,7 +25,6 @@ const PurchaseOrder = () => {
               <option>July</option>
               <option>June</option>
               <option>May</option>
-              {/* Add more months if needed */}
             </select>
             <select className="form-select" value={year} onChange={(e) => setYear(e.target.value)}>
               <option>2025</option>
@@ -30,8 +35,8 @@ const PurchaseOrder = () => {
 
         <div className="col-md-auto">
           <button className="btn btn-success mt-4">
-  <i className="bi bi-download me-1"></i> Download 
-</button>
+            <i className="bi bi-download me-1"></i> Download
+          </button>
         </div>
 
         <div className="col-md-auto">
@@ -43,13 +48,15 @@ const PurchaseOrder = () => {
         </div>
 
         <div className="col-md-auto">
-         <button className="btn btn-success mt-4">
-  <i className="bi bi-download me-1"></i> Download Range
-</button>
+          <button className="btn btn-success mt-4">
+            <i className="bi bi-download me-1"></i> Download Range
+          </button>
         </div>
 
         <div className="col-md-auto">
-          <button className="btn btn-info text-white mt-4">Create</button>
+          <button className="btn btn-info text-white mt-4" onClick={handleCreate}>
+            Create
+          </button>
         </div>
       </div>
 
@@ -72,8 +79,7 @@ const PurchaseOrder = () => {
         <table className="table table-bordered table-hover text-center">
           <thead className="table-light">
             <tr>
-              <th>
-Supplier Name</th>
+              <th>Supplier Name</th>
               <th>Number</th>
               <th>Amount</th>
               <th>Created</th>

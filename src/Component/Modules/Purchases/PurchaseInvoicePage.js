@@ -1,8 +1,11 @@
 // Pages/Purchase/PurchaseInvoicePage.js
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import SalesLayout from '../Sales/LayOut/SalesLayout';
 
 const PurchaseInvoicePage = () => {
+  const navigate = useNavigate();
+
   const [month, setMonth] = useState('July');
   const [year, setYear] = useState('2025');
   const [startDate, setStartDate] = useState('2025-06-08');
@@ -13,7 +16,10 @@ const PurchaseInvoicePage = () => {
 
   const handleDownload = () => console.log("Download clicked");
   const handleDownloadRange = () => console.log("Download Range clicked");
-  const handleCreate = () => console.log("Create Purchase Invoice");
+
+  const handleCreate = () => {
+    navigate("/createinvoice"); // Redirects to create invoice page
+  };
 
   const data = []; // Replace with real data
 
