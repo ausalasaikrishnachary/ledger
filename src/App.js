@@ -44,6 +44,8 @@ import ViewCustomerDetails from './Component/Modules/LedgerContact/ViewCustomerD
 import ViewSupplierDetails from './Component/Modules/LedgerContact/ViewSupplierDetails';
 import Receivables from './Component/Modules/Sales/Receivables/Receivables';
 import CreateInvoice from './Component/CreateInvoice/CreateInvoice';
+import AddProductPage from './Component/Modules/LedgerInventory/AddProductModal';
+import SalesItemsPage from './Component/Modules/LedgerInventory/SalesItemsPage';
 
 
 function App() {
@@ -93,6 +95,8 @@ function App() {
            <Route path="/overduePayables" element={<OverduePayables />} />
             <Route path="/partyWisePayables" element={<PartyWisePayables />} />
             <Route path="/upcomingPayables" element={<UpcomingPayables />} />
+            <Route path='/AddProductPage' element={<AddProductPage />} />
+            <Route path='/salesitemspage' element={<SalesItemsPage />} />
 
 
         </Routes>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Table } from "react-bootstrap";
 import { BsPlus } from "react-icons/bs";
 import AddCompanyModal from "./AddCompanyModal";
 import AddCategoryModal from "./AddCategoryModal";
@@ -9,7 +9,7 @@ import Sidebar from "../../Shared/Sidebar/Sidebar";
 import Header from "../../Shared/Header/Header";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
+const SalesItemsPage = ({ groupType = "Salescatalog", user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const productToEdit = location.state?.productToEdit || null;
@@ -64,7 +64,6 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
     opening_stock_date: "",
     min_stock_alert: "",
     max_stock_alert: "",
-    can_be_sold: false,
     description: "",
     maintain_batch: false,
     batches: []
@@ -74,7 +73,7 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
     if (productToEdit) {
       setFormData({
         group_by: productToEdit.group_by || groupType,
-        goods_name: productToEdit.goods_name || "",
+        goods_name: productToEdit.goods_name || productToEdit.name || "",
         category_id: productToEdit.category_id || "",
         company_id: productToEdit.company_id || "",
         price: productToEdit.price || "",
@@ -91,7 +90,6 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
         opening_stock_date: productToEdit.opening_stock_date || "",
         min_stock_alert: productToEdit.min_stock_alert || "",
         max_stock_alert: productToEdit.max_stock_alert || "",
-        can_be_sold: productToEdit.can_be_sold || false,
         description: productToEdit.description || "",
         maintain_batch: productToEdit.maintain_batch || false,
         batches: productToEdit.batches || []
@@ -125,7 +123,10 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
       expDate: "",
       quantity: "",
       costPrice: "",
-      sellingPrice: ""
+      sellingPrice: "",
+      purchasePrice: "",
+      mrp: "",
+      batchPrice: ""
     };
     const updated = [...batches, newBatch];
     setBatches(updated);
@@ -138,13 +139,13 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
     setFormData((prev) => ({ ...prev, batches: updated }));
   };
 
-const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    // Create a copy of formData without batches
+    // Copy formData but remove batches and maintain_batch before sending
     const dataToSend = { ...formData };
-    delete dataToSend.batches; // remove batches
-    delete dataToSend.maintain_batch; // optional: remove this if you don't want it stored
+    delete dataToSend.batches;
+    delete dataToSend.maintain_batch; // optional, if you don't want to store this
 
     if (productToEdit) {
       await axios.put(`${baseurl}/products/${productToEdit.id}`, dataToSend, {
@@ -157,20 +158,18 @@ const handleSubmit = async (e) => {
       });
       alert("Product added successfully!");
     }
-    navigate('/purchased-items');
+
+    navigate('/sales-items');
   } catch (error) {
     console.error("Failed to add/update product.", error);
     alert("Failed to add/update product.");
   }
 };
 
+
   const pageTitle = productToEdit
-    ? `Edit Product in ${
-        groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"
-      }`
-    : `Add Product to ${
-        groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"
-      }`;
+    ? `Edit Product in Sales Catalog`
+    : `Add Product to Sales Catalog`;
 
   return (
     <div className="dashboard-container">
@@ -180,9 +179,7 @@ const handleSubmit = async (e) => {
       />
       <div className="content-wrapper">
         <div
-          className={`pcoded-navbar ${
-            sidebarCollapsed ? "navbar-collapsed" : ""
-          }`}
+          className={`pcoded-navbar ${sidebarCollapsed ? "navbar-collapsed" : ""}`}
         >
           <Sidebar user={user} collapsed={sidebarCollapsed} />
         </div>
@@ -396,17 +393,6 @@ const handleSubmit = async (e) => {
                       onChange={handleChange}
                     />
                   </div>
-                  {groupType !== "Salescatalog" && (
-                    <div className="col d-flex align-items-center">
-                      <Form.Check
-                        type="checkbox"
-                        label="Can be Sold"
-                        name="can_be_sold"
-                        checked={formData.can_be_sold}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  )}
 
                   <div className="col d-flex align-items-center">
                     <Form.Check
@@ -436,74 +422,100 @@ const handleSubmit = async (e) => {
                 {maintainBatch && (
                   <div className="border border-dark p-3 mb-3">
                     <h5>Batch Details</h5>
-                    {batches.map((batch, index) => (
-                      <div key={batch.id} className="mb-3 border p-2 rounded">
-                        <div className="row mb-2">
-                          <div className="col">
-                            <Form.Control
-                              placeholder="Batch Number"
-                              name="batchNumber"
-                              value={batch.batchNumber}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                          <div className="col">
-                            <Form.Control
-                              type="date"
-                              placeholder="MFG Date"
-                              name="mfgDate"
-                              value={batch.mfgDate}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                          <div className="col">
-                            <Form.Control
-                              type="date"
-                              placeholder="EXP Date"
-                              name="expDate"
-                              value={batch.expDate}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                        </div>
-                        <div className="row mb-2">
-                          <div className="col">
-                            <Form.Control
-                              placeholder="Quantity"
-                              name="quantity"
-                              type="number"
-                              value={batch.quantity}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                          <div className="col">
-                            <Form.Control
-                              placeholder="Cost Price"
-                              name="costPrice"
-                              type="number"
-                              value={batch.costPrice}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                          <div className="col">
-                            <Form.Control
-                              placeholder="Selling Price"
-                              name="sellingPrice"
-                              type="number"
-                              value={batch.sellingPrice}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                        </div>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => removeBatch(batch.id)}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    ))}
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>Batch No.</th>
+                          <th>Exp. Dt</th>
+                          <th>Mfg. Dt</th>
+                          <th>Sale Price</th>
+                          <th>P. Price</th>
+                          <th>M.R.P</th>
+                          <th>B. Price</th>
+                          <th>Stock</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {batches.map((batch, index) => (
+                          <tr key={batch.id}>
+                            <td>
+                              <Form.Control
+                                placeholder="Batch Number"
+                                name="batchNumber"
+                                value={batch.batchNumber}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="date"
+                                name="expDate"
+                                value={batch.expDate}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="date"
+                                name="mfgDate"
+                                value={batch.mfgDate}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="sellingPrice"
+                                value={batch.sellingPrice}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="purchasePrice"
+                                value={batch.purchasePrice}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="mrp"
+                                value={batch.mrp}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="batchPrice"
+                                value={batch.batchPrice}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="quantity"
+                                value={batch.quantity}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => removeBatch(batch.id)}
+                              >
+                                Remove
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
                     <Button variant="primary" onClick={addNewBatch}>
                       Add Batch
                     </Button>
@@ -513,7 +525,7 @@ const handleSubmit = async (e) => {
                 <div className="d-flex justify-content-end">
                   <Button
                     variant="secondary"
-                    onClick={() => navigate('/purchased-items')}
+                    onClick={() => navigate('/sales-items')}
                     className="me-2"
                   >
                     Close
@@ -554,4 +566,4 @@ const handleSubmit = async (e) => {
   );
 };
 
-export default AddProductPage;
+export default SalesItemsPage;

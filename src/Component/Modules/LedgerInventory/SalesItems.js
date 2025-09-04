@@ -3,27 +3,25 @@ import { FaEdit, FaTrash, FaPlusCircle, FaMinusCircle, FaEye, FaShoppingBag } fr
 import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
 import './PurchasedItems.css';
-import AddProductModal from './AddProductModal';
+
 import AddServiceModal from './AddServiceModal';
 import AddStockModal from './AddStockModal';
 import DeductStockModal from './DeductStockModal';
 import StockDetailsModal from './StockDetailsModal';
 import { baseurl } from './../../BaseURL/BaseURL';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SalesItems = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [products, setProducts] = useState([]);
+
   const [dateRange, setDateRange] = useState('');
   const [search, setSearch] = useState('');
-  const [showProductModal, setShowProductModal] = useState(false);
   const [showServiceModal, setShowServiceModal] = useState(false);
   const [showStockModal, setShowStockModal] = useState(false);
   const [showDeductModal, setShowDeductModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
-  const [stock, setStock] = useState(10);
-  const [productToEdit, setProductToEdit] = useState(null);
-  const [stockData, setStockData] = useState();
   const [items, setItems] = useState([]);
   const [selectedProductId, setSelectedProductId] = useState(null);
   const [currentStockData, setCurrentStockData] = useState({
@@ -32,66 +30,12 @@ const SalesItems = ({ user }) => {
     stock_out: 0,
     balance_stock: 0
   });
+  const [stockData, setStockData] = useState(null);
+  const navigate = useNavigate();
 
-  const handleAddStock = async ({ quantity, remark }) => {
-    try {
-      const response = await axios.post(`${baseurl}/stock/${selectedProductId}`, {
-        stock_in: quantity,
-        stock_out: 0,
-        date: new Date().toISOString().split('T')[0],
-        remark
-      });
-
-      fetchProducts();
-      alert("Stock added successfully!");
-    } catch (error) {
-      console.error("Error adding stock:", error);
-      alert("Failed to add stock");
-    }
-  };
-
-  const handleDeductStock = async ({ quantity, remark }) => {
-    try {
-      const response = await axios.post(`${baseurl}/stock/${selectedProductId}`, {
-        stock_in: 0,
-        stock_out: quantity,
-        date: new Date().toISOString().split('T')[0],
-        remark
-      });
-
-      fetchProducts();
-      alert("Stock deducted successfully!");
-    } catch (error) {
-      console.error("Error deducting stock:", error);
-      alert("Failed to deduct stock");
-    }
-  };
-
-  const handleEditClick = (product) => {
-    setProductToEdit({
-      id: product.id,
-      goods_name: product.name,
-      price: product.price,
-      description: product.description,
-      gst_rate: product.gst,
-      opening_stock: product.opening_stock,
-      category_id: product.category_id,
-      company_id: product.company_id,
-      inclusive_gst: product.inclusive_gst,
-      non_taxable: product.non_taxable,
-      net_price: product.net_price,
-      hsn_code: product.hsn_code,
-      unit: product.unit,
-      cess_rate: product.cess_rate,
-      cess_amount: product.cess_amount,
-      sku: product.sku,
-      opening_stock_date: product.opening_stock_date,
-      min_stock_alert: product.min_stock_alert,
-      max_stock_alert: product.max_stock_alert,
-      can_be_sold: product.can_be_sold
-    });
-    setShowProductModal(true);
-  };
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const fetchProducts = async () => {
     try {
@@ -131,23 +75,58 @@ const SalesItems = ({ user }) => {
     }
   };
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+const handleDeleteProduct = async (productId) => {
+  console.log("Deleting product ID:", productId);
 
-  const handleDeleteProduct = async (productId) => {
-    console.log("id", productId);
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      try {
-        await axios.delete(`${baseurl}/products/${productId}`);
-        alert("Product deleted successfully!");
-        fetchProducts();
-      } catch (error) {
-        console.error("Full error details:", error);
-        console.error("Response data:", error.response?.data);
-        alert(`Failed to delete product: ${error.response?.data?.message || error.message}`);
-      }
+  if (!window.confirm("Are you sure you want to delete this product?")) return;
+
+  try {
+    const { data } = await axios.delete(`${baseurl}/products/${productId}`);
+    alert(data.message || "Product deleted successfully!");
+
+    // Update UI without re-fetching all products
+    setProducts(prevProducts => prevProducts.filter(p => p.id !== productId));
+  } catch (error) {
+    console.error("Delete failed:", error.response || error.message);
+    alert("Failed to delete product");
+  }
+};
+
+
+  const handleAddStock = async ({ quantity, remark }) => {
+    try {
+      await axios.post(`${baseurl}/stock/${selectedProductId}`, {
+        stock_in: quantity,
+        stock_out: 0,
+        date: new Date().toISOString().split('T')[0],
+        remark
+      });
+      fetchProducts();
+      alert("Stock added successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to add stock");
     }
+  };
+
+  const handleDeductStock = async ({ quantity, remark }) => {
+    try {
+      await axios.post(`${baseurl}/stock/${selectedProductId}`, {
+        stock_in: 0,
+        stock_out: quantity,
+        date: new Date().toISOString().split('T')[0],
+        remark
+      });
+      fetchProducts();
+      alert("Stock deducted successfully!");
+    } catch (error) {
+      console.error(error);
+      alert("Failed to deduct stock");
+    }
+  };
+
+  const handleEditClick = (product) => {
+    navigate("/salesitemspage", { state: { productToEdit: product } });
   };
 
   const filteredItems = items.filter(item =>
@@ -180,27 +159,27 @@ const SalesItems = ({ user }) => {
                       <i className="bi bi-plus-circle me-2"></i> ADD
                     </button>
                     <ul className="dropdown-menu">
-                      <li><button className="dropdown-item" onClick={() => setShowProductModal(true)}>Products</button></li>
-                      <li><button className="dropdown-item" onClick={() => setShowServiceModal(true)}>Services</button></li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => navigate("/salesitemspage")}
+                        >
+                          Products
+                        </button>
+                      </li>
+                      <li>
+                        <button className="dropdown-item" onClick={() => setShowServiceModal(true)}>Services</button>
+                      </li>
                     </ul>
                   </div>
                 </div>
-
-                <AddProductModal
-                  show={showProductModal} 
-                  onClose={() => {
-                    setShowProductModal(false);
-                    setProductToEdit(null);
-                  }}
-                  groupType="Salescatalog"
-                  productToEdit={productToEdit}
-                />
 
                 <AddServiceModal 
                   show={showServiceModal}
                   onClose={() => setShowServiceModal(false)}
                   groupType="Salescatalog"
                 />
+
                 <div className="d-flex gap-2">
                   <button className="btn btn-warning">Bulk Upload</button>
                   <button className="btn btn-info">Export</button>
@@ -242,7 +221,7 @@ const SalesItems = ({ user }) => {
                   <table className="table table-bordered table-striped text-center">
                     <thead className="table-dark">
                       <tr>
-                        <th> PRODUCT NAME</th>
+                        <th>PRODUCT NAME</th>
                         <th>DESCRIPTION</th>
                         <th>GST RATE</th>
                         <th>UPDATED BY</th>
@@ -263,8 +242,7 @@ const SalesItems = ({ user }) => {
                           <td>{item.description}</td>
                           <td>GST Rate: {item.gst}</td>
                           <td>
-                            {item.updatedBy}
-                            <br />
+                            {item.updatedBy}<br />
                             {item.updatedOn}
                           </td>
                           <td>
@@ -273,11 +251,13 @@ const SalesItems = ({ user }) => {
                               title="Edit" 
                               onClick={() => handleEditClick(item)}
                             />
-                            <FaTrash 
-                              className="text-danger me-2 action-icon" 
-                              title="Delete" 
-                              onClick={() => handleDeleteProduct(item.id)}
-                            />
+                          <FaTrash
+  className="text-danger me-2 action-icon"
+  title="Delete"
+  style={{ cursor: "pointer" }}
+  onClick={() => handleDeleteProduct(item.id)}
+/>
+
                             <FaPlusCircle
                               className="text-warning me-2 action-icon"
                               title="Add"
@@ -331,25 +311,6 @@ const SalesItems = ({ user }) => {
                     </tbody>
                   </table>
                 </div>
-
-                <div className="d-flex justify-content-between">
-                  <div>Showing 1 to {filteredItems.length} of {filteredItems.length} entries</div>
-                  <div>
-                    <nav>
-                      <ul className="pagination pagination-sm mb-0">
-                        <li className="page-item disabled"><span className="page-link">Previous</span></li>
-                        <li className="page-item active"><span className="page-link">1</span></li>
-                        <li className="page-item disabled"><span className="page-link">Next</span></li>
-                      </ul>
-                    </nav>
-                  </div>
-                </div>
-              </div>
-
-              <div className="summary-box card mt-3 p-3">
-                <p>Total Active Catalogue: {items.length}</p>
-                <p>Total Active Products: {items.length}</p>
-                <p>Total Active Services: 0</p>
               </div>
             </div>
           </div>

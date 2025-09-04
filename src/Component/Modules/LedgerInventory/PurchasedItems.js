@@ -7,12 +7,13 @@ import {
 import Sidebar from '../../Shared/Sidebar/Sidebar';
 import Header from '../../Shared/Header/Header';
 import './PurchasedItems.css';
-import AddProductModal from './AddProductModal';
+
 import AddServiceModal from './AddServiceModal';
 import AddStockModal from './AddStockModal';
 import DeductStockModal from './DeductStockModal';
 import StockDetailsModal from './StockDetailsModal';
 import { baseurl } from '../../BaseURL/BaseURL';
+import { useNavigate } from "react-router-dom";
 
 const PurchasedItems = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -34,6 +35,7 @@ const PurchasedItems = ({ user }) => {
     stock_out: 0,
     balance_stock: 0
   });
+  const navigate = useNavigate();
 
   const handleAddStock = async ({ quantity, remark }) => {
     try {
@@ -68,7 +70,7 @@ const PurchasedItems = ({ user }) => {
   };
 
   const handleEditClick = (product) => {
-    setProductToEdit({
+    const productData = {
       id: product.id,
       goods_name: product.name,
       price: product.price,
@@ -88,9 +90,13 @@ const PurchasedItems = ({ user }) => {
       opening_stock_date: product.opening_stock_date,
       min_stock_alert: product.min_stock_alert,
       max_stock_alert: product.max_stock_alert,
-      can_be_sold: product.can_be_sold
-    });
-    setShowProductModal(true);
+      can_be_sold: product.can_be_sold,
+      group_by: 'Purchaseditems',
+      maintain_batch: false,
+      batches: []
+    };
+    
+    navigate('/AddProductPage', { state: { productToEdit: productData } });
   };
 
   const fetchProducts = async () => {
@@ -140,7 +146,6 @@ const PurchasedItems = ({ user }) => {
   );
 
   const handleDeleteProduct = async (productId) => {
-    console.log("id", productId);
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await axios.delete(`${baseurl}/products/${productId}`);
@@ -192,7 +197,10 @@ const PurchasedItems = ({ user }) => {
                     </button>
                     <ul className="dropdown-menu">
                       <li>
-                        <button className="dropdown-item" onClick={() => setShowProductModal(true)}>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => navigate("/AddProductPage")}
+                        >
                           Products
                         </button>
                       </li>
@@ -205,15 +213,6 @@ const PurchasedItems = ({ user }) => {
                   </div>
                 </div>
 
-                <AddProductModal
-                  show={showProductModal} 
-                  onClose={() => {
-                    setShowProductModal(false);
-                    setProductToEdit(null);
-                  }}
-                  groupType="Purchaseditems"
-                  productToEdit={productToEdit}
-                />
                 <AddServiceModal 
                   show={showServiceModal} 
                   onClose={() => setShowServiceModal(false)}
