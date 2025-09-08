@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
+import { Button, Form, Table, Alert } from "react-bootstrap";
 import { BsPlus } from "react-icons/bs";
 import AddCompanyModal from "./AddCompanyModal";
 import AddCategoryModal from "./AddCategoryModal";
@@ -13,6 +13,7 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const productToEdit = location.state?.productToEdit || null;
+  console.log("productToEdit=",productToEdit)
 
   const [showCompanyModal, setShowCompanyModal] = useState(false);
   const [companyOptions, setCompanyOptions] = useState([]);
@@ -21,6 +22,7 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
   const [maintainBatch, setMaintainBatch] = useState(false);
   const [batches, setBatches] = useState([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [alert, setAlert] = useState({ show: false, message: "", variant: "success" });
 
   useEffect(() => {
     fetchCategories();
@@ -33,6 +35,7 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
       setCategoryOptions(response.data);
     } catch (error) {
       console.error("Error fetching categories:", error);
+      showAlert("Error fetching categories", "danger");
     }
   };
 
@@ -42,7 +45,28 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
       setCompanyOptions(response.data);
     } catch (error) {
       console.error("Error fetching companies:", error);
+      showAlert("Error fetching companies", "danger");
     }
+  };
+
+  const showAlert = (message, variant = "success") => {
+    setAlert({ show: true, message, variant });
+    setTimeout(() => setAlert({ show: false, message: "", variant: "success" }), 3000);
+  };
+
+  const createDefaultBatch = () => {
+    return {
+      id: Date.now(),
+      batchNumber: "",
+      mfgDate: "",
+      expDate: "",
+      quantity: "",
+      costPrice: "",
+      sellingPrice: formData.price || "",
+      purchasePrice: "",
+      mrp: "",
+      batchPrice: ""
+    };
   };
 
   const [formData, setFormData] = useState({
@@ -61,20 +85,50 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
     cess_amount: "",
     sku: "",
     opening_stock: "",
-    opening_stock_date: "",
+    opening_stock_date: new Date().toISOString().split('T')[0],
     min_stock_alert: "",
     max_stock_alert: "",
-    can_be_sold: false,
     description: "",
     maintain_batch: false,
-    batches: []
+    can_be_sold:false
   });
 
   useEffect(() => {
     if (productToEdit) {
+      // Fetch batches for this product
+      const fetchBatches = async () => {
+        try {
+          const response = await axios.get(`${baseurl}/products/${productToEdit.id}/batches`);
+
+          // Map backend field names to frontend field names
+          const mappedBatches = response.data && response.data.length > 0
+            ? response.data.map(batch => ({
+              id: batch.id,
+              batchNumber: batch.batch_number || "",
+              mfgDate: batch.mfg_date ? batch.mfg_date.split('T')[0] : "",
+              expDate: batch.exp_date ? batch.exp_date.split('T')[0] : "",
+              quantity: batch.quantity || "",
+              costPrice: batch.cost_price || "",
+              sellingPrice: batch.selling_price || formData.price || "",
+              purchasePrice: batch.purchase_price || "",
+              mrp: batch.mrp || "",
+              batchPrice: batch.batch_price || ""
+            }))
+            : [createDefaultBatch()];
+
+          setBatches(mappedBatches);
+          console.log("mappedBatches=", mappedBatches);
+        } catch (error) {
+          console.error("Error fetching batches:", error);
+          setBatches([createDefaultBatch()]);
+        }
+      };
+
+      fetchBatches();
+
       setFormData({
         group_by: productToEdit.group_by || groupType,
-        goods_name: productToEdit.goods_name || "",
+        goods_name: productToEdit.goods_name || productToEdit.name || "",
         category_id: productToEdit.category_id || "",
         company_id: productToEdit.company_id || "",
         price: productToEdit.price || "",
@@ -88,25 +142,36 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
         cess_amount: productToEdit.cess_amount || "",
         sku: productToEdit.sku || "",
         opening_stock: productToEdit.opening_stock || "",
-        opening_stock_date: productToEdit.opening_stock_date || "",
+        opening_stock_date: productToEdit.opening_stock_date || new Date().toISOString().split('T')[0],
         min_stock_alert: productToEdit.min_stock_alert || "",
         max_stock_alert: productToEdit.max_stock_alert || "",
-        can_be_sold: productToEdit.can_be_sold || false,
         description: productToEdit.description || "",
         maintain_batch: productToEdit.maintain_batch || false,
-        batches: productToEdit.batches || []
+         can_be_sold: productToEdit.can_be_sold || false
+
       });
       setMaintainBatch(productToEdit.maintain_batch || false);
-      setBatches(productToEdit.batches || []);
     }
   }, [productToEdit, groupType]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value
-    }));
+
+    if (name === "maintain_batch") {
+      // When maintain_batch is checked, add a default batch if batches array is empty
+      if (checked && batches.length === 0) {
+        const defaultBatch = createDefaultBatch();
+        const updatedBatches = [...batches, defaultBatch];
+        setBatches(updatedBatches);
+      }
+      setFormData(prev => ({ ...prev, maintain_batch: checked }));
+      setMaintainBatch(checked);
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === "checkbox" ? checked : value
+      }));
+    }
   };
 
   const handleBatchChange = (index, e) => {
@@ -114,63 +179,81 @@ const AddProductPage = ({ groupType = "Purchaseditems", user }) => {
     const updated = [...batches];
     updated[index][name] = value;
     setBatches(updated);
-    setFormData((prev) => ({ ...prev, batches: updated }));
   };
 
   const addNewBatch = () => {
-    const newBatch = {
-      id: Date.now(),
-      batchNumber: "",
-      mfgDate: "",
-      expDate: "",
-      quantity: "",
-      costPrice: "",
-      sellingPrice: ""
-    };
+    const newBatch = createDefaultBatch();
     const updated = [...batches, newBatch];
     setBatches(updated);
-    setFormData((prev) => ({ ...prev, batches: updated }));
   };
 
   const removeBatch = (id) => {
+    if (batches.length <= 1 && maintainBatch) {
+      showAlert("At least one batch is required when Maintain Batch is enabled.", "warning");
+      return;
+    }
     const updated = batches.filter((b) => b.id !== id);
     setBatches(updated);
-    setFormData((prev) => ({ ...prev, batches: updated }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    // Create a copy of formData without batches
-    const dataToSend = { ...formData };
-    delete dataToSend.batches; // remove batches
-    delete dataToSend.maintain_batch; // optional: remove this if you don't want it stored
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    if (productToEdit) {
-      await axios.put(`${baseurl}/products/${productToEdit.id}`, dataToSend, {
-        headers: { "Content-Type": "application/json" },
-      });
-      alert("Product updated successfully!");
-    } else {
-      await axios.post(`${baseurl}/products`, dataToSend, {
-        headers: { "Content-Type": "application/json" },
-      });
-      alert("Product added successfully!");
+    // Validate batches if maintain_batch is enabled
+    if (maintainBatch) {
+      const invalidBatches = batches.filter(batch =>
+        !batch.batchNumber || !batch.quantity || !batch.sellingPrice
+      );
+
+      if (invalidBatches.length > 0) {
+        showAlert("Please fill all required fields in batch details (Batch Number, Quantity, and Selling Price)", "warning");
+        return;
+      }
     }
-    navigate('/purchased-items');
-  } catch (error) {
-    console.error("Failed to add/update product.", error);
-    alert("Failed to add/update product.");
-  }
-};
+
+    try {
+      // Prepare batches data with backend field names
+      const batchesForBackend = maintainBatch ? batches.map(batch => ({
+        batchNumber: batch.batchNumber,
+        mfgDate: batch.mfgDate || null,
+        expDate: batch.expDate || null,
+        quantity: batch.quantity,
+        costPrice: batch.costPrice || 0,
+        sellingPrice: batch.sellingPrice,
+        purchasePrice: batch.purchasePrice || 0,
+        mrp: batch.mrp || 0,
+        batchPrice: batch.batchPrice || 0
+      })) : [];
+
+      const dataToSend = {
+        ...formData,
+        ...(maintainBatch && { batches: batchesForBackend })
+      };
+
+      if (productToEdit) {
+        await axios.put(`${baseurl}/products/${productToEdit.id}`, dataToSend, {
+          headers: { "Content-Type": "application/json" },
+        });
+        showAlert("Product updated successfully!");
+      } else {
+        await axios.post(`${baseurl}/products`, dataToSend, {
+          headers: { "Content-Type": "application/json" },
+        });
+        showAlert("Product added successfully!");
+      }
+
+      setTimeout(() => navigate('/purchased-items'), 1500);
+    } catch (error) {
+      console.error("Failed to add/update product.", error);
+      showAlert("Failed to add/update product.", "danger");
+    }
+  };
 
   const pageTitle = productToEdit
-    ? `Edit Product in ${
-        groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"
-      }`
-    : `Add Product to ${
-        groupType === "Salescatalog" ? "Sales Catalog" : "Purchased Items"
-      }`;
+    ? `Edit Product in Purchased Items`
+    : `Add Product to Purchased Items`;
+
+
 
   return (
     <div className="dashboard-container">
@@ -180,9 +263,7 @@ const handleSubmit = async (e) => {
       />
       <div className="content-wrapper">
         <div
-          className={`pcoded-navbar ${
-            sidebarCollapsed ? "navbar-collapsed" : ""
-          }`}
+          className={`pcoded-navbar ${sidebarCollapsed ? "navbar-collapsed" : ""}`}
         >
           <Sidebar user={user} collapsed={sidebarCollapsed} />
         </div>
@@ -396,6 +477,7 @@ const handleSubmit = async (e) => {
                       onChange={handleChange}
                     />
                   </div>
+
                   {groupType !== "Salescatalog" && (
                     <div className="col d-flex align-items-center">
                       <Form.Check
@@ -436,77 +518,110 @@ const handleSubmit = async (e) => {
                 {maintainBatch && (
                   <div className="border border-dark p-3 mb-3">
                     <h5>Batch Details</h5>
-                    {batches.map((batch, index) => (
-                      <div key={batch.id} className="mb-3 border p-2 rounded">
-                        <div className="row mb-2">
-                          <div className="col">
-                            <Form.Control
-                              placeholder="Batch Number"
-                              name="batchNumber"
-                              value={batch.batchNumber}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                          <div className="col">
-                            <Form.Control
-                              type="date"
-                              placeholder="MFG Date"
-                              name="mfgDate"
-                              value={batch.mfgDate}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                          <div className="col">
-                            <Form.Control
-                              type="date"
-                              placeholder="EXP Date"
-                              name="expDate"
-                              value={batch.expDate}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                        </div>
-                        <div className="row mb-2">
-                          <div className="col">
-                            <Form.Control
-                              placeholder="Quantity"
-                              name="quantity"
-                              type="number"
-                              value={batch.quantity}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                          <div className="col">
-                            <Form.Control
-                              placeholder="Cost Price"
-                              name="costPrice"
-                              type="number"
-                              value={batch.costPrice}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                          <div className="col">
-                            <Form.Control
-                              placeholder="Selling Price"
-                              name="sellingPrice"
-                              type="number"
-                              value={batch.sellingPrice}
-                              onChange={(e) => handleBatchChange(index, e)}
-                            />
-                          </div>
-                        </div>
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          onClick={() => removeBatch(batch.id)}
-                        >
-                          Remove
-                        </Button>
-                      </div>
-                    ))}
+                    <Table striped bordered hover>
+                      <thead>
+                        <tr>
+                          <th>Batch No.*</th>
+                          <th>Exp. Date</th>
+                          <th>Mfg. Date</th>
+                          <th>Sale Price*</th>
+                          <th>Purchase Price</th>
+                          <th>M.R.P</th>
+                          <th>Batch Price</th>
+                          <th>Stock*</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {batches.map((batch, index) => (
+                          <tr key={batch.id}>
+                            <td>
+                              <Form.Control
+                                placeholder="Batch Number"
+                                name="batchNumber"
+                                value={batch.batchNumber}
+                                onChange={(e) => handleBatchChange(index, e)}
+                                required
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="date"
+                                name="expDate"
+                                value={batch.expDate}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="date"
+                                name="mfgDate"
+                                value={batch.mfgDate}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="sellingPrice"
+                                value={batch.sellingPrice}
+                                onChange={(e) => handleBatchChange(index, e)}
+                                required
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="purchasePrice"
+                                value={batch.purchasePrice}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="mrp"
+                                value={batch.mrp}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="batchPrice"
+                                value={batch.batchPrice}
+                                onChange={(e) => handleBatchChange(index, e)}
+                              />
+                            </td>
+                            <td>
+                              <Form.Control
+                                type="number"
+                                name="quantity"
+                                value={batch.quantity}
+                                onChange={(e) => handleBatchChange(index, e)}
+                                required
+                              />
+                            </td>
+                            <td>
+                              <Button
+                                variant="danger"
+                                size="sm"
+                                onClick={() => removeBatch(batch.id)}
+                                disabled={batches.length <= 1}
+                              >
+                                Remove
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </Table>
                     <Button variant="primary" onClick={addNewBatch}>
                       Add Batch
                     </Button>
+                    <div className="mt-2 text-muted">
+                      <small>* indicates required fields</small>
+                    </div>
                   </div>
                 )}
 

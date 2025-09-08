@@ -92,7 +92,7 @@ const PurchasedItems = ({ user }) => {
       max_stock_alert: product.max_stock_alert,
       can_be_sold: product.can_be_sold,
       group_by: 'Purchaseditems',
-      maintain_batch: false,
+      maintain_batch: product.maintain_batch,
       batches: []
     };
     
@@ -129,9 +129,11 @@ const PurchasedItems = ({ user }) => {
           opening_stock_date: item.opening_stock_date,
           min_stock_alert: item.min_stock_alert,
           max_stock_alert: item.max_stock_alert,
-          can_be_sold: item.can_be_sold
+          can_be_sold: item.can_be_sold,
+          maintain_batch: item.maintain_batch,
         }));
       setItems(formatted);
+      console.log("Data=",formatted)
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -279,7 +281,7 @@ const PurchasedItems = ({ user }) => {
                             <span className="text-muted">RS. {item.price}</span>
                           </td>
                           <td>{item.description}</td>
-                          <td>GST Rate: {item.gst}%</td>
+                          <td>GST Rate: {item.gst}</td>
                           <td>
                             {item.updatedBy}
                             <br />
