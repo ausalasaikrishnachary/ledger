@@ -4,6 +4,7 @@ import './CreateInvoice.css';
 import Sidebar from '../../../src/Component/Shared/Sidebar/Sidebar';
 import Header from '../../../src/Component/Shared/Header/Header';
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { baseurl } from './../../Component/BaseURL/BaseURL';
 
 const CreateInvoice = ({ user }) => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -230,7 +231,7 @@ const CreateInvoice = ({ user }) => {
     setSuccess(false);
     
     try {
-      const response = await fetch('http://localhost:5000/transaction', {
+      const response = await fetch(`${baseurl}/transaction`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
